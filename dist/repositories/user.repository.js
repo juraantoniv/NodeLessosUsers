@@ -9,5 +9,11 @@ class UserRepository {
     async Create(user) {
         return await User_model_1.User.create(user);
     }
+    async Delete(id) {
+        await User_model_1.User.findByIdAndDelete(id);
+    }
+    async updateName(id, newUser) {
+        return await User_model_1.User.findByIdAndUpdate(id, newUser);
+    }
 }
 exports.userRepository = new UserRepository();

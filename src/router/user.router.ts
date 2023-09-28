@@ -5,6 +5,7 @@ import {ApiError} from "../errors/api.errors";
 import {User} from "../models/User.model";
 import {IUser} from "../types/user.type";
 import {userMiddleware} from "../midlewares/user.midleware";
+import {userMiddlewareForDel} from "../midlewares/userCheckIdMidleware";
 
 const router = Router();
 
@@ -25,6 +26,41 @@ router.post(
         }
     },
 );
+
+router.delete(
+    "/",userMiddlewareForDel.deleteThrow,async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+        try {
+            const { id } = req.body
+            if (!id) {
+                throw new ApiError('Something Wrong', 400);
+            }
+             await userController.Delete(id);
+            res.status(201).json('User was deleted');
+        } catch (e) {
+            next(e);
+        }
+    },
+);
+
+router.patch(
+    "/",async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+        try {
+            const {id, name} = req.body.data;
+            const user = await User.find({_id: id});
+            if (!user) {
+                throw new ApiError("User not found", 404);
+            }
+            const newUser = {...user, name: name}
+            const us = await userController.Update(id, newUser)
+
+            res.status(201).json(us);
+        }
+        catch (e) {
+            next(e)
+        }
+    }
+);
+
 
 
 export const userRouter = router;

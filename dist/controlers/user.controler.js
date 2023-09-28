@@ -17,5 +17,11 @@ class UserController {
     async Create(user) {
         return await user_servise_1.userService.Create(user);
     }
+    async Delete(id) {
+        await user_servise_1.userService.DeleteUser(id);
+    }
+    async Update(id, user) {
+        return await user_servise_1.userService.updateUser(id, user);
+    }
 }
 exports.userController = new UserController();

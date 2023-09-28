@@ -10,5 +10,11 @@ class UserService {
     async Create(user) {
         return await user_repository_1.userRepository.Create(user);
     }
+    async DeleteUser(id) {
+        await user_repository_1.userRepository.Delete(id);
+    }
+    async updateUser(id, user) {
+        return await user_repository_1.userRepository.updateName(id, user);
+    }
 }
 exports.userService = new UserService();

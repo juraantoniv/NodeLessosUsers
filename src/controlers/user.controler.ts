@@ -21,6 +21,12 @@ class UserController {
     public async Create(user:IUser): Promise<IUser> {
             return  await userService.Create(user);
     }
+    public async Delete(id:string): Promise<void> {
+          await userService.DeleteUser(id);
+    }
+    public async Update(id:string,user:any): Promise<any> {
+        return await userService.updateUser(id,user);
+    }
 }
 
 export const userController = new UserController();

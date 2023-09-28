@@ -23,9 +23,17 @@ app.listen(PORT, ()=>{
     console.log(`Server has successfully started on PORT ${PORT}`);
 })
 
-
-
 app.use("/users", userRouter);
+
+
+app.use((err:any, req:Request, res:Response, next:NewableFunction)=>{
+    const status = err.status || 500;
+    res.status(status).json(err.message);
+})
+
+
+
+
 
 // app.get('/users', async (req, res,next: NextFunction)=>{
 //
@@ -100,10 +108,4 @@ app.use("/users", userRouter);
 //        next(e)
 //     }
 // });
-
-
-app.use((err:any, req:Request, res:Response, next:NewableFunction)=>{
-    const status = err.status || 500;
-    res.status(status).json(err.message);
-})
 
