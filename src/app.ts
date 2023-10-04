@@ -4,10 +4,9 @@ import cors from "cors";
 
 import * as mongoose from "mongoose";
 import { configs } from "./configs/config";
-import {User} from "./models/User.model";
-import {UserValidator} from "./validators/user.validator";
-import {ApiError} from "./errors/api.errors";
 import {userRouter} from "./router/user.router";
+import {goodsRouter} from "./router/goods.router";
+import {authRouter} from "./router/auth.router";
 
 const app = express();
 app.use(cors())
@@ -24,6 +23,8 @@ app.listen(PORT, ()=>{
 })
 
 app.use("/users", userRouter);
+app.use("/goods", goodsRouter);
+app.use("/auth", authRouter);
 
 
 app.use((err:any, req:Request, res:Response, next:NewableFunction)=>{

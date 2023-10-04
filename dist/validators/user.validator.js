@@ -10,12 +10,22 @@ class UserValidator {
 }
 exports.UserValidator = UserValidator;
 _a = UserValidator;
-UserValidator.firstName = joi_1.default.string().min(2).max(50).trim();
+UserValidator.nameUser = joi_1.default.string().min(2).max(50).trim();
+UserValidator.password = joi_1.default.string().min(2).max(50).trim();
 UserValidator.email = joi_1.default.string().email().trim().required();
 UserValidator.create = joi_1.default.object({
-    name: _a.firstName.required(),
+    name: _a.password.required(),
     email: _a.email.required(),
 });
 UserValidator.update = joi_1.default.object({
-    name: _a.firstName,
+    name: _a.password,
+});
+UserValidator.register = joi_1.default.object({
+    email: _a.email.required(),
+    password: _a.password.required(),
+    name: _a.nameUser
+});
+UserValidator.login = joi_1.default.object({
+    email: _a.email.required(),
+    password: _a.password.required(),
 });

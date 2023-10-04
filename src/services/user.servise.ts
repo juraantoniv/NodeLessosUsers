@@ -8,19 +8,17 @@ class UserService {
 
         return users;
     }
-    public async Create(user:IUser): Promise<IUser> {
-
-
-        return await userRepository.Create(user);
-
-    }
 
     public async DeleteUser(id:string): Promise<void> {
         await userRepository.Delete(id);
 
     }
-    public async updateUser(id:string,user:any): Promise<any> {
+    public async updateUser(id:string,user:any): Promise<IUser> {
         return await userRepository.updateName(id,user);
+
+    }
+    public async findUser(name:string): Promise<any> {
+        return await userRepository.findByName(name);
 
     }
 }

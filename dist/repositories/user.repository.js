@@ -6,14 +6,18 @@ class UserRepository {
     async getAll() {
         return await User_model_1.User.find();
     }
-    async Create(user) {
-        return await User_model_1.User.create(user);
-    }
     async Delete(id) {
         await User_model_1.User.findByIdAndDelete(id);
     }
     async updateName(id, newUser) {
         return await User_model_1.User.findByIdAndUpdate(id, newUser);
+    }
+    async findByName(name) {
+        const user = await User_model_1.User.find({ name: name });
+        return user;
+    }
+    async register(dto) {
+        return await User_model_1.User.create(dto);
     }
 }
 exports.userRepository = new UserRepository();

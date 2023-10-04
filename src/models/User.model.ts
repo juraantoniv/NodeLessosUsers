@@ -1,9 +1,11 @@
 import { model, Schema } from "mongoose";
-import {EGenders} from '../enums/gender.enum'
+import * as mongoose from "mongoose";
+import {IUser} from "../types/user.type";
+
 
 const userSchema = new Schema(
     {
-        name: {
+        password: {
             type: String,
         },
         email: {
@@ -13,11 +15,19 @@ const userSchema = new Schema(
             unique: true,
             trim: true,
         },
+        name: {
+            type: String,
+        },
     },
     {
         timestamps: true,
         versionKey: false,
+
     },
 );
+
+
+
+
 
 export const User = model("user", userSchema);

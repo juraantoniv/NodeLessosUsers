@@ -2,11 +2,14 @@ import { NextFunction, Request, Response } from "express";
 import {userService} from "../services/user.servise";
 import {IUser} from "../types/user.type";
 import {userMiddleware} from "../midlewares/user.midleware";
-import {UserValidator} from "../validators/user.validator";
+import {GoodsValidator} from "../validators/goods.validator";
 import {ApiError} from "../errors/api.errors";
 import {User} from "../models/User.model";
+import {goodsRepository} from "../repositories/goods.repostitory";
+import {goodsService} from "../services/goods.services";
+import {Goods} from "../models/goodsModel";
 
-class UserController {
+class GoodsController {
     public async getAll(
         req: Request,
         res: Response,
@@ -15,13 +18,33 @@ class UserController {
         console.log('all')
 
         try {
-            const users = await userService.getAll();
+            const goods = await goodsRepository.getAll();
             return res.json({
-                data: users,
+                data: goods,
             })
         } catch (e) {
             next(e);
         }
+    }
+    public async Create(req: Request, res: Response, next: NextFunction): Promise<Response> {
+
+        console.log(req.body);
+
+        try {
+            const { error, value } = GoodsValidator.create.validate(req.body);
+            if (error) {
+                throw new ApiError(error.message, 400);
+            }
+            const newGood =  await goodsService.Create(value);
+
+            return res.status(201).json(newGood);
+        }
+
+        catch (e) {
+
+            next(e)
+        }
+
     }
     public async Delete(req: Request, res: Response, next: NextFunction): Promise<Response> {
 
@@ -30,8 +53,8 @@ class UserController {
             if (!id) {
                 throw new ApiError('Something Wrong', 400);
             }
-            await userService.DeleteUser(id);
-            return res.status(201).json('User was deleted');
+            await goodsService.DeleteGood(id);
+            return res.status(201).json('Good was deleted');
         } catch (e) {
             next(e);
         }
@@ -40,18 +63,20 @@ class UserController {
     public async Update(req: Request, res: Response, next: NextFunction): Promise<Response> {
         try {
             const {id, name} = req.body.data;
-            const user = await User.find({_id:id});
+            const user = await Goods.find({_id:id});
+
+
             if (!user) {
-                throw new ApiError("User not found", 404);
+                throw new ApiError("Good not found", 404);
 
             }
 
 
-            const userForUpdate = user[0]
+            const goodForUpdate = user[0]
 
-                userForUpdate.email = name
+            goodForUpdate.name = name
 
-            const us = await userService.updateUser(id, userForUpdate)
+            const us = await goodsService.updateGood(id, goodForUpdate)
             return  res.status(201).json(us);
         }
         catch (e) {
@@ -75,6 +100,6 @@ class UserController {
 
 
 
-export const userController = new UserController();
+export const goodsController = new GoodsController();
 
 

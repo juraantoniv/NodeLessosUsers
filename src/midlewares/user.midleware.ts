@@ -10,14 +10,12 @@ class UserMiddleware {
     public async createOrThrow(req: Request, res: Response, next: NextFunction) {
         try {
 
-            const { error, value } = UserValidator.create.validate(req.body.user);
+            const { error, value } = UserValidator.register.validate(req.body);
 
             const user = await User.findOne({email: value.email});
 
-            console.log(user);
-
             if (user) {
-                throw new ApiError(`user with ${value.email} is in BD`, 404);
+                throw new ApiError(`user with ${value.email} is already  in BD`, 404);
             }
 
             req.res.locals = user;

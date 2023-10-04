@@ -31,6 +31,8 @@ const cors_1 = __importDefault(require("cors"));
 const mongoose = __importStar(require("mongoose"));
 const config_1 = require("./configs/config");
 const user_router_1 = require("./router/user.router");
+const goods_router_1 = require("./router/goods.router");
+const auth_router_1 = require("./router/auth.router");
 const app = (0, express_1.default)();
 app.use((0, cors_1.default)());
 app.use(express_1.default.json());
@@ -41,6 +43,8 @@ app.listen(PORT, () => {
     console.log(`Server has successfully started on PORT ${PORT}`);
 });
 app.use("/users", user_router_1.userRouter);
+app.use("/goods", goods_router_1.goodsRouter);
+app.use("/auth", auth_router_1.authRouter);
 app.use((err, req, res, next) => {
     const status = err.status || 500;
     res.status(status).json(err.message);
