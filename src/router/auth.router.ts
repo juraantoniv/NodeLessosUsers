@@ -9,6 +9,9 @@ const router = Router();
 
 router.post("/register",userMiddleware.createOrThrow, authController.register);
 router.post("/login", authController.login);
-router.post("/refresh",authMiddleware.checkRefreshToken, authController.refresh);
+router.get("/refresh",authMiddleware.checkRefreshToken, authController.refresh);
+router.post("/confirmPassword",authMiddleware.checkActiveToken,authController.recordPassword)
+router.post("/logout",authMiddleware.checkAccessToken,authController.logout)
+router.post("/recoveryPassword",authMiddleware.checkRecoveryEmail,authController.recoveryPassword)
 
 export const authRouter = router;

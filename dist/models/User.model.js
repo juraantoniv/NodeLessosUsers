@@ -16,6 +16,10 @@ const userSchema = new mongoose_1.Schema({
     name: {
         type: String,
     },
+    confirmedRegistration: {
+        type: Boolean,
+        required: true,
+    },
 }, {
     timestamps: true,
     versionKey: false,

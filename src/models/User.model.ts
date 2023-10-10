@@ -18,6 +18,10 @@ const userSchema = new Schema(
         name: {
             type: String,
         },
+        confirmedRegistration: {
+            type:Boolean,
+            required: true,
+        },
     },
     {
         timestamps: true,

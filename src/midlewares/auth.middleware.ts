@@ -2,21 +2,24 @@ import {NextFunction, Request, Response} from "express";
 import {tokenRepository} from "../repositories/token.repository";
 import {ApiError} from "../errors/api.errors";
 import {tokenService} from "../services/tocken.service";
+import {tokenActiveRepository} from "../repositories/active.TokensRepository";
+import {User} from "../models/User.model";
+import {userRepository} from "../repositories/user.repository";
+import {tokenRecoveryRepository} from "../repositories/password.recovery.repository";
 
 
 class AuthMiddleware{
     public async checkRefreshToken (req: Request, res: Response, next: NextFunction){
 
         try {
-
-
-            const refreshToken = req.get("Authorization");
+            const refreshToken = req.get("Refresh");
 
             if (!refreshToken) {
                 throw new ApiError("No Token!", 401);
             }
 
             const entity = await tokenRepository.findOne({ refreshToken });
+
             const payload = tokenService.checkToken(refreshToken, "refresh");
 
             if (!entity) {
@@ -33,7 +36,7 @@ class AuthMiddleware{
 
             next(e)
         }
-        
+
     }
     public async checkAccessToken (req: Request, res: Response, next: NextFunction){
 
@@ -41,6 +44,8 @@ class AuthMiddleware{
 
 
             const accessToken = req.get("Authorization");
+
+            console.log(accessToken);
 
             if (!accessToken) {
                 throw new ApiError("No Token!", 401);
@@ -59,6 +64,55 @@ class AuthMiddleware{
         }
 
 
+        catch (e) {
+
+            next(e)
+        }
+
+    }
+    public async checkActiveToken (req: Request, res: Response, next: NextFunction){
+
+        try {
+
+            const {token}=req.body
+            const entity = await tokenRecoveryRepository.findOne({token});
+            if (!entity) {
+                throw new ApiError("Token not valid!", 401);
+            }
+            const payload = tokenService.checkActiveToken(token);
+
+            if (!token) {
+                throw new ApiError("No Token!", 401);
+            }
+
+                    await tokenActiveRepository.delete({token})
+                req.res.locals.payload = payload;
+                next()
+        }
+        catch (e) {
+
+            next(e)
+        }
+
+    }
+    public async checkRecoveryEmail (req: Request, res: Response, next: NextFunction){
+
+        try {
+
+            const email = req.body.email
+
+
+
+            const user = await User.findOne({email})
+
+
+            if (!user){
+                throw new ApiError(`User with ${email} not fount`,404)
+            }
+
+            req.res.locals.email = email
+        next()
+        }
         catch (e) {
 
             next(e)

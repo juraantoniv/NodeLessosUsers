@@ -6,12 +6,20 @@ import {IToken, ITokenPayload, ITokensPair} from "../types/token.types";
 import {User} from "../models/User.model";
 import {tokenService} from "./tocken.service";
 import {tokenRepository} from "../repositories/token.repository";
+import {emailService} from "./email.service";
+import {EEmailAction} from "../enums/email.action.enum";
+import {tokenActiveRepository} from "../repositories/active.TokensRepository";
 
 class AuthService {
     public async register(dto: IUserCredentials): Promise<void> {
         try {
             const hashedPassword = await passwordService.hash(dto.password);
-            await userRepository.register({...dto,password:hashedPassword});
+           const user = await userRepository.register({...dto,password:hashedPassword, confirmedRegistration:false});
+           const token=tokenService.generateTokenActive({userId:user._id,name:user.name})
+            await tokenActiveRepository.create({token:token,_userId:user._id})
+
+
+            await emailService.sendMail(user.email,EEmailAction.REGISTER,{name:user.name, token:token})
 
         } catch (e) {
             throw new ApiError(e.message, e.status);
@@ -20,7 +28,6 @@ class AuthService {
     public async login(dto: IUserCredentials):Promise<ITokensPair>{
 
         try {
-
             const user = await User.findOne({email: dto.email});
 
             if (!user){
@@ -35,9 +42,8 @@ class AuthService {
                 throw new ApiError('Invalid credentials provided',401)
             }
 
-            const tokensPair = tokenService.generateTokenPair({name:user.email, userId:user._id})
-
-            await tokenRepository.create({...tokensPair,_userId:user._id})
+            const tokensPair = tokenService.generateTokenPair({name:user.name, userId:user._id})
+                await tokenRepository.create({...tokensPair,_userId:user._id})
 
             return  tokensPair
 

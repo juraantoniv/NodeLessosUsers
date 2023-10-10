@@ -15,8 +15,6 @@ class GoodsController {
         res: Response,
         next: NextFunction,
     ): Promise<Response<IUser[]>> {
-        console.log('all')
-
         try {
             const goods = await goodsRepository.getAll();
             return res.json({

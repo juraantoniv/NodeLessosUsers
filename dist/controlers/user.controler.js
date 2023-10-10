@@ -6,7 +6,6 @@ const api_errors_1 = require("../errors/api.errors");
 const User_model_1 = require("../models/User.model");
 class UserController {
     async getAll(req, res, next) {
-        console.log('all');
         try {
             const users = await user_servise_1.userService.getAll();
             return res.json({

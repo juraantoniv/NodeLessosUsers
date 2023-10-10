@@ -17,3 +17,9 @@ export interface IToken extends Document {
     refreshToken: string;
     _userId: Types.ObjectId | IUser;
 }
+
+export interface ITokenActive extends Document {
+    token: string;
+    _userId: Types.ObjectId | string;
+}
+

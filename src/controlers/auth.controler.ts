@@ -1,11 +1,18 @@
-import {NextFunction, Response, Request} from "express";
+import {NextFunction, Request, Response} from "express";
 import {ITokenPayload, ITokensPair} from "../types/token.types";
 import {authService} from "../services/auth.service";
-import {GoodsValidator} from "../validators/goods.validator";
 import {ApiError} from "../errors/api.errors";
 import {UserValidator} from "../validators/user.validator";
-import {IUserCredentials} from "../types/user.type";
-import {userRepository} from "../repositories/user.repository";
+import {User} from "../models/User.model";
+import {tokenService} from "../services/tocken.service";
+import {tokenRepository} from "../repositories/token.repository";
+import {passwordService} from "../services/password.service";
+import {emailService} from "../services/email.service";
+import {EEmailAction} from "../enums/email.action.enum";
+import {tokenActiveRepository, TokenActiveRepository} from "../repositories/active.TokensRepository";
+import {TokenRecoveryRepository, tokenRecoveryRepository} from "../repositories/password.recovery.repository";
+import {TokenRecovery} from "../models/recoveryPassword.model";
+import {Token} from "../models/Token.model";
 
 class AuthController {
     public async register(
@@ -13,7 +20,6 @@ class AuthController {
         res: Response,
         next: NextFunction,
     ): Promise<Response<void>> {
-        console.log(req.body);
         try {
             const { error, value } = UserValidator.register.validate(req.body);
 
@@ -33,15 +39,41 @@ class AuthController {
     ): Promise<Response<ITokensPair>> {
 
         try {
-
             const { error, value } = UserValidator.login.validate(req.body);
-
             if (error){
                 throw new ApiError(error.message,400)
             }
-            const tokensPair = await authService.login(value);
+            const user = await User.findOne({email:value.email })
 
-            return res.json(tokensPair);
+            console.log(user);
+
+            const tokensPair = await authService.login(value);
+            return res.json({
+                user:user,
+                tokens:tokensPair
+            });
+        } catch (e) {
+            next(e);
+        }
+    }
+
+    public async logout(
+        req: Request,
+        res: Response,
+        next: NextFunction,
+    ): Promise<Response<void>> {
+
+        try {
+
+            const payload = req.res.locals.tokenPayload ;
+            const accessToken = req.res.locals.accessToken;
+
+
+            await tokenRepository.delete({accessToken})
+
+            await Token.deleteMany({_userId:payload.userId})
+
+            return res.json('LogOut succeed');
         } catch (e) {
             next(e);
         }
@@ -58,6 +90,55 @@ class AuthController {
             const tokensPair = await authService.refresh(tokenPayload, refreshToken);
 
             return res.status(201).json(tokensPair);
+        } catch (e) {
+            next(e);
+        }
+    }
+
+    public async recordPassword(
+        req: Request,
+        res: Response,
+        next: NextFunction,
+    ): Promise<Response<void>> {
+        try {
+            const tokenPayload = req.res.locals.payload as ITokenPayload;
+
+            const {password,old_password} = req.body
+
+
+            const user = await User.findOne({_id:tokenPayload.userId});
+
+            const compare = await passwordService.compare(old_password,user.password)
+
+                    if (!compare) {
+                        throw new ApiError("Password invalid", 404)
+                    }
+
+
+            user.password = await passwordService.hash(password)
+            await User.findByIdAndUpdate(tokenPayload.userId, user)
+
+            return res.status(201).json('Password was changed')
+        } catch (e) {
+            next(e);
+        }
+    }
+    public async recoveryPassword(
+        req: Request,
+        res: Response,
+        next: NextFunction,
+    ): Promise<Response<ITokensPair>> {
+
+        try {
+            const email = req.res.locals.email
+
+
+            const user= await User.findOne({email})
+
+            const token = tokenService.generateTokenRecovery({name:user.name,userId:user._id})
+            await TokenRecovery.create({_userId:user._id,token:token})
+            await emailService.sendMail(user.email,EEmailAction.FORGOT_PASSWORD,{name:user.name, token:token})
+            return res.status(201).json("Password was changed");
         } catch (e) {
             next(e);
         }

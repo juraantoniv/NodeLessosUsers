@@ -10,7 +10,7 @@ class TokenService {
             expiresIn: "10s",
         });
         const refreshToken = jwt.sign(payload, configs.JWT_REFRESH_SECRET, {
-            expiresIn: "30s",
+            expiresIn: "59s",
         });
 
         return {
@@ -37,6 +37,30 @@ class TokenService {
             throw new ApiError("Token not valid!", 401);
         }
     }
+
+    public generateTokenActive(payload: ITokenPayload): string {
+       return jwt.sign(payload, configs.JWT_ACCESS_SECRET, {
+            expiresIn: "50s",
+        });
+
+    }
+    public generateTokenRecovery(payload: ITokenPayload): string {
+        return jwt.sign(payload, configs.JWT_ACCESS_SECRET, {
+            expiresIn: "50s",
+        });
+
+    }
+    public checkActiveToken(token: string): ITokenPayload {
+        try {
+            return jwt.verify(token,configs.JWT_ACCESS_SECRET) as ITokenPayload;
+
+        }
+        catch (e) {
+            throw new ApiError("Token not valid!", 401);
+        }
+    }
+
+
 }
 
 export const tokenService = new TokenService();

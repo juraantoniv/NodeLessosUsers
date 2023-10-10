@@ -12,8 +12,6 @@ class UserController {
         res: Response,
         next: NextFunction,
     ): Promise<Response<IUser[]>> {
-        console.log('all')
-
         try {
             const users = await userService.getAll();
             return res.json({

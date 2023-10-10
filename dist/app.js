@@ -37,7 +37,7 @@ const app = (0, express_1.default)();
 app.use((0, cors_1.default)());
 app.use(express_1.default.json());
 app.use(express_1.default.urlencoded({ extended: true }));
-const PORT = 5001;
+const PORT = 4899;
 app.listen(PORT, () => {
     mongoose.connect(`${config_1.configs.DB_URI}`);
     console.log(`Server has successfully started on PORT ${PORT}`);
