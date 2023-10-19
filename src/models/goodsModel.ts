@@ -5,6 +5,9 @@ import {IGoods} from "../types/goods.types";
 
 const goodsSchema = new Schema(
     {
+        userId: {
+            type: String,
+        },
         name: {
             type: String,
         },
@@ -20,13 +23,16 @@ const goodsSchema = new Schema(
         price: {
             type:String,
             required: false
+        },
+        boughtBy:{
+            type:String,
+            required:false
         }
 
     },
     {
         timestamps: true,
         versionKey: false,
-
     },
 );
 

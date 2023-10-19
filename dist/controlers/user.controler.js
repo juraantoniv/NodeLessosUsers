@@ -4,6 +4,7 @@ exports.userController = void 0;
 const user_servise_1 = require("../services/user.servise");
 const api_errors_1 = require("../errors/api.errors");
 const User_model_1 = require("../models/User.model");
+const tocken_service_1 = require("../services/tocken.service");
 class UserController {
     async getAll(req, res, next) {
         try {
@@ -54,6 +55,17 @@ class UserController {
         }
         catch (e) {
             next(e);
+        }
+    }
+    async uploadAvatar(req, res, next) {
+        const avatar = req.files.avatar;
+        try {
+            const accessToken = req.get("Authorization");
+            const payload = tocken_service_1.tokenService.checkToken(accessToken, "access");
+            const user = await user_servise_1.userService.uploadAvatar(avatar, payload.userId);
+            return res.status(201).json(user);
+        }
+        catch (e) {
         }
     }
 }

@@ -40,13 +40,9 @@ class AuthMiddleware{
     }
     public async checkAccessToken (req: Request, res: Response, next: NextFunction){
 
+
         try {
-
-
             const accessToken = req.get("Authorization");
-
-            console.log(accessToken);
-
             if (!accessToken) {
                 throw new ApiError("No Token!", 401);
             }

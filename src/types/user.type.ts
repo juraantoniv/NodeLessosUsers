@@ -8,6 +8,8 @@ export interface IUser extends Document {
     email?: string;
     age?:string
     confirmedRegistration?:boolean
+    avatar?:string
+    last_Visited?:string
 }
 
 export type IUserCredentials = Pick<IUser, "email" | "password" | "confirmedRegistration">;

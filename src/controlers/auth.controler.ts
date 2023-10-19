@@ -9,10 +9,13 @@ import {tokenRepository} from "../repositories/token.repository";
 import {passwordService} from "../services/password.service";
 import {emailService} from "../services/email.service";
 import {EEmailAction} from "../enums/email.action.enum";
-import {tokenActiveRepository, TokenActiveRepository} from "../repositories/active.TokensRepository";
-import {TokenRecoveryRepository, tokenRecoveryRepository} from "../repositories/password.recovery.repository";
 import {TokenRecovery} from "../models/recoveryPassword.model";
 import {Token} from "../models/Token.model";
+import dayjs from "dayjs";
+import utc from "dayjs/plugin/utc";
+import {userRepository} from "../repositories/user.repository";
+import {userService} from "../services/user.servise";
+import {userPresenter} from "../presenters/user.presenter";
 
 class AuthController {
     public async register(
@@ -44,8 +47,6 @@ class AuthController {
                 throw new ApiError(error.message,400)
             }
             const user = await User.findOne({email:value.email })
-
-            console.log(user);
 
             const tokensPair = await authService.login(value);
             return res.json({
@@ -86,6 +87,18 @@ class AuthController {
         try {
             const tokenPayload = req.res.locals.tokenPayload as ITokenPayload;
             const refreshToken = req.res.locals.refreshToken as string;
+
+            dayjs.extend(utc);
+
+            const day = dayjs().utc().format("DD/MM/YYYY HH:mm:ss ").toString()
+
+            console.log(day);
+
+            let userForUpdate = await User.findById(tokenPayload.userId)
+
+
+
+            await userRepository.updateName(tokenPayload.userId.toString(),{...userForUpdate,last_Visited:day})
 
             const tokensPair = await authService.refresh(tokenPayload, refreshToken);
 
@@ -139,6 +152,29 @@ class AuthController {
             await TokenRecovery.create({_userId:user._id,token:token})
             await emailService.sendMail(user.email,EEmailAction.FORGOT_PASSWORD,{name:user.name, token:token})
             return res.status(201).json("Password was changed");
+        } catch (e) {
+            next(e);
+        }
+    }
+    public async me(
+        req: Request,
+        res: Response,
+        next: NextFunction,
+    ): Promise<Response<void>> {
+
+        try {
+
+            const payload = req.res.locals.tokenPayload ;
+            const accessToken = req.res.locals.accessToken;
+
+
+
+            const user = await userRepository.findByID(payload.userId)
+
+            const presenter = userPresenter.present(user)
+
+
+            return res.status(201).json(presenter);
         } catch (e) {
             next(e);
         }

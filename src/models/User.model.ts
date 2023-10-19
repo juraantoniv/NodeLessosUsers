@@ -22,6 +22,13 @@ const userSchema = new Schema(
             type:Boolean,
             required: true,
         },
+        avatar:{
+            type:String,
+            required:false
+        },
+        last_Visited:{
+            typeof :String,
+        }
     },
     {
         timestamps: true,
@@ -34,4 +41,4 @@ const userSchema = new Schema(
 
 
 
-export const User = model("user", userSchema);
+export const User = model<IUser>("user", userSchema);

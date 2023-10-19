@@ -26,22 +26,15 @@ class AuthService {
         }
     }
     public async login(dto: IUserCredentials):Promise<ITokensPair>{
-
         try {
             const user = await User.findOne({email: dto.email});
-
             if (!user){
-
                 throw new ApiError('Invalid credentials provided',401)
             }
-
             const isMatch = await passwordService.compare(dto.password,user.password)
-
-
             if (!isMatch){
                 throw new ApiError('Invalid credentials provided',401)
             }
-
             const tokensPair = tokenService.generateTokenPair({name:user.name, userId:user._id})
                 await tokenRepository.create({...tokensPair,_userId:user._id})
 

@@ -5,6 +5,8 @@ import {userMiddleware} from "../midlewares/user.midleware";
 import {UserValidator} from "../validators/user.validator";
 import {ApiError} from "../errors/api.errors";
 import {User} from "../models/User.model";
+import {tokenService} from "../services/tocken.service";
+import {UploadedFile} from "express-fileupload";
 
 class UserController {
     public async getAll(
@@ -67,6 +69,22 @@ class UserController {
         }
         catch (e) {
             next(e)
+        }
+    }
+
+    public async uploadAvatar(req: Request, res: Response, next: NextFunction):Promise<Response<void>>{
+        const avatar = req.files.avatar as UploadedFile
+
+        try {
+
+            const accessToken = req.get("Authorization");
+            const payload = tokenService.checkToken(accessToken, "access");
+            const user = await userService.uploadAvatar(avatar, payload.userId)
+
+            return res.status(201).json(user);
+        }
+        catch (e) {
+            
         }
     }
 }

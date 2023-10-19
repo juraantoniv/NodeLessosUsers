@@ -7,10 +7,10 @@ import {ApiError} from "../errors/api.errors";
 class TokenService {
     public generateTokenPair(payload: ITokenPayload): ITokensPair {
         const accessToken = jwt.sign(payload, configs.JWT_ACCESS_SECRET, {
-            expiresIn: "10s",
+            expiresIn: "5m",
         });
         const refreshToken = jwt.sign(payload, configs.JWT_REFRESH_SECRET, {
-            expiresIn: "59s",
+            expiresIn: "10m",
         });
 
         return {

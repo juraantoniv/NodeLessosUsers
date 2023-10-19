@@ -9,6 +9,7 @@ const router = Router();
 
 router.post("/register",userMiddleware.createOrThrow, authController.register);
 router.post("/login", authController.login);
+router.get("/me", authMiddleware.checkAccessToken, authController.me);
 router.get("/refresh",authMiddleware.checkRefreshToken, authController.refresh);
 router.post("/confirmPassword",authMiddleware.checkActiveToken,authController.recordPassword)
 router.post("/logout",authMiddleware.checkAccessToken,authController.logout)

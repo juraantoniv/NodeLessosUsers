@@ -20,6 +20,13 @@ const userSchema = new mongoose_1.Schema({
         type: Boolean,
         required: true,
     },
+    avatar: {
+        type: String,
+        required: false
+    },
+    last_Visited: {
+        typeof: String,
+    }
 }, {
     timestamps: true,
     versionKey: false,

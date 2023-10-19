@@ -16,6 +16,10 @@ class UserRepository {
         const user = await User_model_1.User.find({ name: name });
         return user;
     }
+    async findByID(id) {
+        const user = await User_model_1.User.findOne({ _id: id });
+        return user;
+    }
     async register(dto) {
         return await User_model_1.User.create(dto);
     }
