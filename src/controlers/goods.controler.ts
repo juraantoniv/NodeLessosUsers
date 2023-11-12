@@ -78,7 +78,6 @@ class GoodsController {
 
         try {
             const {userId} = await tokenService.checkToken(accessToken,'access')
-
             if (!userId){
                 throw new ApiError('Token not valid', 404)
             }
@@ -97,8 +96,7 @@ class GoodsController {
                 throw new ApiError(error.message, 400);
 
             }
-                const course = await axios.get('https://api.privatbank.ua/p24api/pubinfo?json&exchange&coursid=5')
-
+            const course = await axios.get('https://api.privatbank.ua/p24api/pubinfo?json&exchange&coursid=5')
             const myObject:any = {}
 
             myObject.UAH=Number(value.currency)
