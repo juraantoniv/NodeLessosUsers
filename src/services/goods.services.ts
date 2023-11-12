@@ -52,9 +52,6 @@ class UserService {
     }
     public async Create(user:IGoods): Promise<IGoods> {
 
-        await checkWordsService.check(user.description)
-
-
         return await goodsRepository.Create(user);
 
     }
