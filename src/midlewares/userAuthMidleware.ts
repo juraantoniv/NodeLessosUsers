@@ -22,7 +22,7 @@ class AuthMiddlewareForCheck {
 
                 if (user.rights !== field){
 
-                    throw new ApiError('You don have rights to change user',201)
+                    throw new ApiError('You don have rights ',401)
                 }
 
 

@@ -2,6 +2,7 @@
 import {BoughtType, IGoods} from "../types/goods.types";
 import {Cars} from "../models/goodsModel";
 import {FilterQuery, UpdateQuery} from "mongoose";
+import {userViews} from "../models/User.views.model";
 
 class GoodsRepository {
     public async getAll(): Promise<IGoods[]> {
@@ -16,7 +17,7 @@ class GoodsRepository {
     public async Delete(id: string): Promise<void> {
         await Cars.findByIdAndDelete(id)
     }
-    public async updateName(id: string,newUser:IGoods): Promise<IGoods> {
+    public async update(id: string,newUser:IGoods): Promise<IGoods> {
         return await Cars.findByIdAndUpdate(id,newUser)
     }
     public async findByName(name:string): Promise<IGoods[]> {
@@ -55,69 +56,15 @@ class GoodsRepository {
     }
 
     public async findGoodsViews(date: Date, id:string) {
-        return await Cars.aggregate([
-            {
-                $lookup: {
-                    from: "userViews",
-                    localField: "_id",
-                    foreignField: "_carId",
-                    as: "views",
-                },
-            },
-            {
-                $match: {
-                    views: {
-                        $not: {
-                            $elemMatch: {
-                                _id:id,
-                                createdAt: {
-                                    $gte: date, // Greater than or equal to the beginning of the day
-                                    $lt: new Date(date.getTime() + 24 * 60 * 60 * 1000), // Less than the beginning of the next day
-                                },
-                            },
-                        },
-                    },
-                },
-            },
-            {
-                $project: {
-                    _id: 1,
-                },
-            },
-        ]);
+        const currentDate= new Date()
+        const endOfDay = new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate() + 1)
+       return userViews.find({_carId:id, createdAt: { $gte: date, $lt: endOfDay }})
     }
     public async findGoodsViewsWeek(date: Date, id:string){
-        return await Cars.aggregate([
-            {
-                $lookup: {
-                    from: "userViews",
-                    localField: "_id",
-                    foreignField: "_carId",
-                    as: "views",
-                },
-            },
-            {
-                $match: {
-                    views: {
-                        $not: {
-                            $elemMatch: {
-                                id:id,
-                                createdAt: {
-                                    $gte: date,
-                                    $lt: new Date(date.getDate() -7),
-                                },
-                            },
-                        },
-                    },
-                },
-            },
-            {
-                $project: {
-                    _id: 1,
-                    name:1,
-                },
-            },
-        ]);
+        const currentDate= new Date()
+        const endOfWeek = new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate() + 7)
+        return userViews.find({_carId:id, createdAt: { $gte: date, $lt: endOfWeek }})
+
     }
 }
 

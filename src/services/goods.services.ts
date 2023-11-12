@@ -64,7 +64,7 @@ class UserService {
 
     }
     public async updateGood(id:string,user:IGoods): Promise<IGoods> {
-        return await goodsRepository.updateName(id,user);
+        return await goodsRepository.update(id,user);
 
     }
     public async findUser(name:string): Promise<any> {

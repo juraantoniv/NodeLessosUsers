@@ -89,19 +89,10 @@ class AuthController {
             const refreshToken = req.res.locals.refreshToken as string;
 
             dayjs.extend(utc);
-
             const day = dayjs().utc().format("DD/MM/YYYY HH:mm:ss ").toString()
-
-            console.log(day);
-
             let userForUpdate = await User.findById(tokenPayload.userId)
-
-
-
             await userRepository.updateName(tokenPayload.userId.toString(),{...userForUpdate,last_Visited:day})
-
             const tokensPair = await authService.refresh(tokenPayload, refreshToken);
-
             return res.status(201).json(tokensPair);
         } catch (e) {
             next(e);
@@ -115,18 +106,13 @@ class AuthController {
     ): Promise<Response<void>> {
         try {
             const tokenPayload = req.res.locals.payload as ITokenPayload;
-
             const {password,old_password} = req.body
-
-
             const user = await User.findOne({_id:tokenPayload.userId});
-
             const compare = await passwordService.compare(old_password,user.password)
 
                     if (!compare) {
                         throw new ApiError("Password invalid", 404)
                     }
-
 
             user.password = await passwordService.hash(password)
             await User.findByIdAndUpdate(tokenPayload.userId, user)
@@ -144,10 +130,7 @@ class AuthController {
 
         try {
             const email = req.res.locals.email
-
-
             const user= await User.findOne({email})
-
             const token = tokenService.generateTokenRecovery({name:user.name,userId:user._id})
             await TokenRecovery.create({_userId:user._id,token:token})
             await emailService.sendMail(user.email,EEmailAction.FORGOT_PASSWORD,{name:user.name, token:token})
@@ -163,17 +146,10 @@ class AuthController {
     ): Promise<Response<void>> {
 
         try {
-
             const payload = req.res.locals.tokenPayload ;
             const accessToken = req.res.locals.accessToken;
-
-
-
             const user = await userRepository.findByID(payload.userId)
-
             const presenter = userPresenter.present(user)
-
-
             return res.status(201).json(presenter);
         } catch (e) {
             next(e);

@@ -71,12 +71,9 @@ class GoodsController {
         }
     }
     public async Create(req: Request, res: Response, next: NextFunction): Promise<Response> {
-
         const accessToken = req.get("Authorization");
-
         const payload = tokenService.checkToken(accessToken, "access");
         const user = await User.findById(payload.userId).lean()
-
         const file = req.files.image as UploadedFile
 
         try {
@@ -125,12 +122,19 @@ class GoodsController {
     public async Delete(req: Request, res: Response, next: NextFunction): Promise<Response> {
 
         try {
+
+            const accessToken = req.get("Authorization");
+            const payload = tokenService.checkToken(accessToken, "access");
             const { id } = req.body
+            const car= await Cars.findById(id)
+            if (car.userId!==payload.userId.toString()){
+                throw new ApiError(`You can't delete a car that not yours`, 400);
+            }
             if (!id) {
                 throw new ApiError('Something Wrong', 400);
             }
             await goodsService.DeleteGood(id);
-            return res.status(201).json('Good was deleted');
+            return res.status(201).json('Car was deleted');
         } catch (e) {
             next(e);
         }
@@ -138,19 +142,23 @@ class GoodsController {
     }
     public async Update(req: Request, res: Response, next: NextFunction): Promise<Response> {
         try {
-            const {id, name} = req.body.data;
-            const user = await Cars.find({_id:id});
 
+            const accessToken = req.get("Authorization");
+            const payload = tokenService.checkToken(accessToken, "access");
 
-            if (!user) {
-                throw new ApiError("Good not found", 404);
+            const {id} = req.params;
+            const carForUpdate = req.body;
+            const car = await Cars.findById(id).lean();
+
+            if (car.userId!==payload.userId.toString()){
+                throw new ApiError(`You can't edit a car that not yours`, 400);
+            }
+            if (!car) {
+                throw new ApiError("Car not found", 404);
 
             }
 
-            const goodForUpdate = user[0]
-            goodForUpdate.name = name
-
-            const us = await goodsService.updateGood(id, goodForUpdate)
+            const us = await goodsService.updateGood(id, carForUpdate)
             return  res.status(201).json(us);
         }
         catch (e) {
@@ -160,9 +168,6 @@ class GoodsController {
     public async findByName(req: Request, res: Response, next: NextFunction): Promise<Response> {
         try {
             const { name} = req.params;
-
-            console.log('name')
-
             const us = await userService.findUser(name)
             return  res.status(201).json(us);
         }
@@ -174,29 +179,23 @@ class GoodsController {
         try {
             const { id} = req.params;
 
-            const today = new Date();
-            today.setHours(0, 0, 0, 0)
+            const currentDate = new Date();
+            const startOfDay = new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate())
 
-                const viewsToday = await goodsRepository.findGoodsViews(today,id)
-                const viewsWeek = await goodsRepository.findGoodsViewsWeek(today,id)
+                const viewsToday = await goodsRepository.findGoodsViews(startOfDay,id)
+                const viewsWeek = await goodsRepository.findGoodsViewsWeek(startOfDay,id)
 
             console.log(viewsToday);
-            console.log(viewsWeek);
+
 
             const us = await goodsService.getByCarId(id)
-
             const user = await User.findOne({_id:us.userId}).lean()
-
             await userViews.create({_carId:id,_userId:us.userId})
-
             us.views = us.views+1
-
             const goodsAfterView = await Cars.findByIdAndUpdate(id,us,{
                 returnDocument:'after'
             }).lean()
-
             const goods = user.userPremiumRights ==="premium"? presenterForPremium.present(goodsAfterView, viewsToday.length, viewsWeek.length): goodsPresenter.present(goodsAfterView)
-
             return  res.status(201).json(goods);
         }
         catch (e) {

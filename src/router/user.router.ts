@@ -8,10 +8,10 @@ import {authMiddleware} from "../midlewares/auth.middleware";
 
 const router = Router();
 
-router.get("", userController.getAll);
+router.get("",authMiddlewareForCheck.checkRightsOfUser(ERights.Admin), userController.getAll);
 router.delete("",userMiddlewareForDel.deleteThrow,userController.Delete);
 router.patch("/update",authMiddlewareForCheck.checkRightsOfUser(ERights.Admin),authMiddleware.checkAccessToken,userController.Update);
-router.get(":name",userController.findByName);
+router.get(":name",authMiddleware.checkAccessToken,userController.findByName);
 router.post("/uploadAvatar",fileMiddleware.isAvatarValid,userController.uploadAvatar);
 
 
