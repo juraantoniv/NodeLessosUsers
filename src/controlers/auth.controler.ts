@@ -14,7 +14,6 @@ import {Token} from "../models/Token.model";
 import dayjs from "dayjs";
 import utc from "dayjs/plugin/utc";
 import {userRepository} from "../repositories/user.repository";
-import {userService} from "../services/user.servise";
 import {userPresenter} from "../presenters/user.presenter";
 
 class AuthController {
@@ -25,7 +24,6 @@ class AuthController {
     ): Promise<Response<void>> {
         try {
             const { error, value } = UserValidator.register.validate(req.body);
-
             await authService.register(value)
             if (error) {
                 throw new ApiError(error.message, 400);
@@ -40,14 +38,12 @@ class AuthController {
         res: Response,
         next: NextFunction,
     ): Promise<Response<ITokensPair>> {
-
         try {
             const { error, value } = UserValidator.login.validate(req.body);
             if (error){
                 throw new ApiError(error.message,400)
             }
             const user = await User.findOne({email:value.email })
-
             const tokensPair = await authService.login(value);
             return res.json({
                 user:userPresenter.present(user),
@@ -57,7 +53,6 @@ class AuthController {
             next(e);
         }
     }
-
     public async logout(
         req: Request,
         res: Response,
@@ -68,12 +63,8 @@ class AuthController {
 
             const payload = req.res.locals.tokenPayload ;
             const accessToken = req.res.locals.accessToken;
-
-
             await tokenRepository.delete({accessToken})
-
             await Token.deleteMany({_userId:payload.userId})
-
             return res.json('LogOut succeed');
         } catch (e) {
             next(e);
@@ -87,7 +78,6 @@ class AuthController {
         try {
             const tokenPayload = req.res.locals.tokenPayload as ITokenPayload;
             const refreshToken = req.res.locals.refreshToken as string;
-
             dayjs.extend(utc);
             const day = dayjs().utc().format("DD/MM/YYYY HH:mm:ss ").toString()
             let userForUpdate = await User.findById(tokenPayload.userId)

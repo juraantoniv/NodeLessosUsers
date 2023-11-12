@@ -42,7 +42,6 @@ class GoodsController {
 
         const {goodId} = req.body
         const payload = req.res.locals.tokenPayload
-
        const userWhoWantBuyCar = await User.findById(payload.userId).lean()
 
         try {
@@ -50,11 +49,8 @@ class GoodsController {
             if (!good){
                 throw new ApiError(`Car is sold`,404)
             }
-
-               await goodsService.buyGoods(payload.userId,goodId)
-
-                    const goods = await goodsRepository.findGoodById(goodId)
-
+            await goodsService.buyGoods(payload.userId,goodId)
+            const goods = await goodsRepository.findGoodById(goodId)
             const user = await User.findById(goods.userId).lean()
 
             await Promise.all([
@@ -62,7 +58,6 @@ class GoodsController {
                 Cars.deleteOne({_id:goodId}),
                 emailService.sendMail(user.email,EEmailAction.Buy,{user:userWhoWantBuyCar.name,email:userWhoWantBuyCar.email, city:userWhoWantBuyCar.city,brand:goods.model})
             ])
-
             return res.json({
                 data: goods
             })
@@ -96,11 +91,10 @@ class GoodsController {
                 throw new ApiError(error.message, 400);
 
             }
+
             const course = await axios.get('https://api.privatbank.ua/p24api/pubinfo?json&exchange&coursid=5')
             const myObject:any = {}
-
             myObject.UAH=Number(value.currency)
-
             const arr =[]
             arr.push(myObject,{USD:Math.ceil(Number(value.currency)/Number(course.data[0].sale))},{EUR:Math.ceil(Number(value.currency)/Number(course.data[1].sale))})
             const newGood =  await goodsService.Create({...value,currency:arr});
@@ -143,11 +137,9 @@ class GoodsController {
 
             const accessToken = req.get("Authorization");
             const payload = tokenService.checkToken(accessToken, "access");
-
             const {id} = req.params;
             const carForUpdate = req.body;
             const car = await Cars.findById(id).lean();
-
             if (car.userId!==payload.userId.toString()){
                 throw new ApiError(`You can't edit a car that not yours`, 400);
             }
@@ -197,9 +189,7 @@ class GoodsController {
     public async likes(req: Request, res: Response, next: NextFunction): Promise<Response> {
         try {
             const { id} = req.params;
-
             const car = await goodsService.getByCarId(id)
-
             car.likes = car.likes+1
             const goodsAfterView = await Cars.findByIdAndUpdate(id,car,{
                 returnDocument:'after'

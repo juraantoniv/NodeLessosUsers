@@ -9,9 +9,7 @@ const storage = multer.diskStorage({
     },
     filename: async function (req,file,cb){
         const token = req.get('Authorization')
-
         try {
-
             cb(null, new Date().toISOString().replace(/:/g, '-') +'-'+ file.originalname);
         }
 

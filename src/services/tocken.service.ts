@@ -18,7 +18,6 @@ class TokenService {
             refreshToken,
         };
     }
-
     public checkToken(token: string, type: "access" | "refresh"): ITokenPayload {
         try {
             let secret: string;

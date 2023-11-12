@@ -23,7 +23,6 @@ class UserService {
             const queryObj = JSON.parse(
                 queryStr.replace(/\b(gte|lte|gt|lt)\b/, (match) => `$${match}`),
             );
-
             console.log(queryObj);
             const {
                 page = 1,

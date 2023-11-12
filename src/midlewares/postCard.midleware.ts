@@ -14,20 +14,15 @@ class PostCardMiddleware {
             const payload = tokenService.checkToken(accessToken, "access");
             const cars = await Cars.find().lean()
             const user = await User.findById(payload.userId).lean()
-
             const findUser = cars.find(el=>el.userId==payload.userId.toString())
                 if (findUser && user.userPremiumRights === EType.Default )
                 {
                     throw new ApiError('You can post only one , please buy premiumAccount',201)
                 }
-
-
             next()
         }
 
-
         catch (e) {
-
             next(e)
         }
 

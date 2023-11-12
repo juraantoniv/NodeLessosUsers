@@ -38,12 +38,7 @@ class UserController {
 
     }
     public async Update(req: Request, res: Response, next: NextFunction): Promise<Response> {
-
         const payload = req.res.locals.tokenPayload ;
-
-        console.log(payload);
-
-
         try {
             const dto = req.body;
             const user = await User.findOne({_id:payload.userId});
@@ -62,9 +57,6 @@ class UserController {
     public async findByName(req: Request, res: Response, next: NextFunction): Promise<Response> {
         try {
             const { name} = req.params;
-
-            console.log('name')
-
             const us = await userService.findUser(name)
             return  res.status(201).json(us);
         }
@@ -77,11 +69,9 @@ class UserController {
         const avatar = req.files.avatar as UploadedFile
 
         try {
-
             const accessToken = req.get("Authorization");
             const payload = tokenService.checkToken(accessToken, "access");
             const user = await userService.uploadAvatar(avatar, payload.userId)
-
             return res.status(201).json(user);
         }
         catch (e) {

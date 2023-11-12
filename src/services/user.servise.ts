@@ -27,14 +27,11 @@ class UserService {
 
 
     public async uploadAvatar(avatar: fileUpload.UploadedFile, userId: Types.ObjectId):Promise<IUser>{
-
         const checkUser = await userRepository.findByID(userId);
-
         if (checkUser.avatar) {
             await s3Service.deleteFile(checkUser.avatar);
         }
         const filePath = await s3Service.uploadFile(avatar,EFileTypes.User, userId.toString())
-
         const user = await User.findByIdAndUpdate(userId,{avatar:filePath},{
             returnDocument:"after"
         })

@@ -1,7 +1,7 @@
 import { model, Schema, Types } from "mongoose";
 
 import { User } from "./User.model";
-import {IHouse} from "../types/warehoser.type";
+import {IHouse} from "../types/warehose.type";
 import {worker} from "./workers.model";
 
 const houseSchema = new Schema(

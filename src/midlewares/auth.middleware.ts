@@ -13,19 +13,14 @@ class AuthMiddleware{
 
         try {
             const refreshToken = req.get("Refresh");
-
             if (!refreshToken) {
                 throw new ApiError("No Token!", 401);
             }
-
             const entity = await tokenRepository.findOne({ refreshToken });
-
             const payload = tokenService.checkToken(refreshToken, "refresh");
-
             if (!entity) {
                 throw new ApiError("Token not valid!", 401);
             }
-
             req.res.locals.tokenPayload = payload;
             req.res.locals.refreshToken = refreshToken;
             next()
@@ -46,14 +41,11 @@ class AuthMiddleware{
             if (!accessToken) {
                 throw new ApiError("No Token!", 401);
             }
-
             const entity = await tokenRepository.findOne({ accessToken });
             const payload = tokenService.checkToken(accessToken, "access");
-
             if (!entity) {
                 throw new ApiError("Token not valid!", 401);
             }
-
             req.res.locals.tokenPayload = payload;
             req.res.locals.accessToken = accessToken;
             next()
@@ -69,7 +61,6 @@ class AuthMiddleware{
     public async checkActiveToken (req: Request, res: Response, next: NextFunction){
 
         try {
-
             const {token}=req.body
             const entity = await tokenRecoveryRepository.findOne({token});
             if (!entity) {
@@ -80,7 +71,6 @@ class AuthMiddleware{
             if (!token) {
                 throw new ApiError("No Token!", 401);
             }
-
                     await tokenActiveRepository.delete({token})
                 req.res.locals.payload = payload;
                 next()
@@ -94,18 +84,11 @@ class AuthMiddleware{
     public async checkRecoveryEmail (req: Request, res: Response, next: NextFunction){
 
         try {
-
             const email = req.body.email
-
-
-
             const user = await User.findOne({email})
-
-
             if (!user){
                 throw new ApiError(`User with ${email} not fount`,404)
             }
-
             req.res.locals.email = email
         next()
         }

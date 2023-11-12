@@ -9,10 +9,8 @@ class BuyDataService {
 
         return users;
     }
-
     public async create(data:BoughtType, goodsId: string): Promise<void> {
         await buyDataRepository.create(data, goodsId);
-
     }
     public async getByUserId(id:string): Promise<BoughtType[]> {
         return await buyDataRepository.getByUserId(id);
