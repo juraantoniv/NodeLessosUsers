@@ -50,7 +50,7 @@ class AuthController {
 
             const tokensPair = await authService.login(value);
             return res.json({
-                user:user,
+                user:userPresenter.present(user),
                 tokens:tokensPair
             });
         } catch (e) {

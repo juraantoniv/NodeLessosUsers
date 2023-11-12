@@ -5,14 +5,16 @@ import {userMiddlewareForDel} from "../midlewares/userCheckIdMidleware";
 import {authMiddleware} from "../midlewares/auth.middleware";
 import {buyDataRepository} from "../repositories/bought.data.repository";
 import {buyController} from "../controlers/buy.controler";
+import {cardMiddleware} from "../midlewares/postCard.midleware";
 
 const router = Router();
 
 router.get("",authMiddleware.checkAccessToken, goodsController.getAll);
+router.get("/getById/:id",authMiddleware.checkAccessToken, goodsController.findById);
 router.post("/buy",authMiddleware.checkAccessToken, goodsController.buyGoods);
-router.post("/getBought", buyController.getAllBuId);
+router.get("/getUsersCars", buyController.getAllBuId);
 
-router.post("",goodsController.Create);
+router.post("",cardMiddleware.postCar,goodsController.Create);
 
 router.delete("",userMiddlewareForDel.deleteThrow,goodsController.Delete);
 
@@ -22,4 +24,4 @@ router.get(":name",goodsController.findByName);
 
 
 
-export const goodsRouter = router;
+export const carsRouter = router;

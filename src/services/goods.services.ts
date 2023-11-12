@@ -1,9 +1,13 @@
 
-import { IGoods } from "../types/goods.types";
+import {IGoods, IGoodsForMany} from "../types/goods.types";
 import {goodsRepository} from "../repositories/goods.repostitory";
 import {IPaginationResponse, IQuery} from "../types/pagination.type";
-import {Goods} from "../models/goodsModel";
 import {ApiError} from "../errors/api.errors";
+import {FilterQuery} from "mongoose";
+import axios from "axios";
+import {configs} from "../configs/config";
+import {checkWordsService} from "./check.words.service";
+import {Cars} from "../models/goodsModel";
 
 class UserService {
     public async getAll(): Promise<IGoods[]> {
@@ -20,6 +24,7 @@ class UserService {
                 queryStr.replace(/\b(gte|lte|gt|lt)\b/, (match) => `$${match}`),
             );
 
+            console.log(queryObj);
             const {
                 page = 1,
                 limit = 5,
@@ -28,20 +33,12 @@ class UserService {
             } = queryObj;
 
             const skip = +limit * (+page - 1);
-
             const [users, itemsFound] = await Promise.all([
-                Goods.find(searchObject).limit(+limit).skip(skip).sort(sortedBy),
-                Goods.count(searchObject),
+                Cars.find(searchObject).limit(+limit).skip(skip).sort(sortedBy),
+                Cars.count(searchObject),
             ]);
 
-            // const user = await User.findOne({
-            //     email: "julianne.oconner@kory.org",
-            // });
-            //
-            // // const userNameWithAge = user.nameWithAge(); // name + age
-            //
-            // // const user = await User.findByEmail("julianne.oconner@kory.org");
-            // // console.log(user);
+            console.log(users);
 
             return {
                 page: +page,
@@ -55,6 +52,8 @@ class UserService {
     }
     public async Create(user:IGoods): Promise<IGoods> {
 
+        await checkWordsService.check(user.description)
+
 
         return await goodsRepository.Create(user);
 
@@ -64,7 +63,7 @@ class UserService {
         await goodsRepository.Delete(id);
 
     }
-    public async updateGood(id:string,user:any): Promise<IGoods> {
+    public async updateGood(id:string,user:IGoods): Promise<IGoods> {
         return await goodsRepository.updateName(id,user);
 
     }
@@ -77,6 +76,12 @@ class UserService {
         return await goodsRepository.findByIdUpdate(userId,goodId)
 
     }
+    public async getByCarId(carId:string): Promise<IGoodsForMany> {
+
+        return await goodsRepository.findGoodById(carId)
+
+    }
+
 }
 
 export const goodsService = new UserService();

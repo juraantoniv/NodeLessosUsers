@@ -38,20 +38,21 @@ class UserController {
 
     }
     public async Update(req: Request, res: Response, next: NextFunction): Promise<Response> {
+
+        const payload = req.res.locals.tokenPayload ;
+
+        console.log(payload);
+
+
         try {
-            const {id, name} = req.body.data;
-            const user = await User.find({_id:id});
+            const dto = req.body;
+            const user = await User.findOne({_id:payload.userId});
             if (!user) {
                 throw new ApiError("User not found", 404);
 
             }
 
-
-            const userForUpdate = user[0]
-
-                userForUpdate.email = name
-
-            const us = await userService.updateUser(id, userForUpdate)
+            const us = await userService.updateUser(payload.userId, dto)
             return  res.status(201).json(us);
         }
         catch (e) {

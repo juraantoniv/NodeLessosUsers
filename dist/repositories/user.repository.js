@@ -10,7 +10,10 @@ class UserRepository {
         await User_model_1.User.findByIdAndDelete(id);
     }
     async updateName(id, newUser) {
-        return await User_model_1.User.findByIdAndUpdate(id, newUser);
+        console.log(newUser);
+        return await User_model_1.User.findByIdAndUpdate(id, newUser, {
+            returnDocument: 'after'
+        });
     }
     async findByName(name) {
         const user = await User_model_1.User.find({ name: name });

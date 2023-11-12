@@ -21,4 +21,4 @@ const tokensRemover = async () => {
 
 }
 
-export const removeOldTokens = new CronJob("*/10 * * * * *", tokensRemover);
+export const removeOldTokens = new CronJob("*/1000 * * * * *", tokensRemover);

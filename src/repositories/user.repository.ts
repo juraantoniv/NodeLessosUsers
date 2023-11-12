@@ -1,6 +1,7 @@
 import { User } from "../models/User.model";
 import {IUser, IUserCredentials} from "../types/user.type";
 import {FilterQuery, Types, UpdateQuery} from "mongoose";
+import {ERights} from "../enums/users.rights.enum";
 
 class UserRepository {
     public async getAll(): Promise<IUser[]> {
@@ -10,10 +11,12 @@ class UserRepository {
     public async Delete(id: string): Promise<void> {
         await User.findByIdAndDelete(id)
     }
-    public async updateName(id: string,newUser:UpdateQuery<IUser>): Promise<IUser> {
+    public async updateName(id: string,newUser:UpdateQuery<Partial<IUser>>): Promise<IUser> {
+        console.log(newUser);
 
-
-        return await User.findByIdAndUpdate(id,newUser)
+        return await User.findByIdAndUpdate(id,newUser,{
+            returnDocument:'after'
+        })
     }
     public async findByName(name:string): Promise<any> {
 
@@ -34,6 +37,7 @@ class UserRepository {
     public async register(dto: IUserCredentials): Promise<IUser> {
         return await User.create(dto);
     }
+
 }
 
 export const userRepository = new UserRepository();

@@ -5,10 +5,10 @@ import fileUpload from "express-fileupload";
 import * as mongoose from "mongoose";
 import { configs } from "./configs/config";
 import {userRouter} from "./router/user.router";
-import {goodsRouter} from "./router/goods.router";
 import {authRouter} from "./router/auth.router";
 import {filesRouter} from "./router/files.router";
 import {cronRunner} from "./crons";
+import {carsRouter} from "./router/cars.router";
 
 const app = express();
 app.use(cors())
@@ -26,7 +26,7 @@ app.listen(PORT, ()=>{
 })
 
 app.use("/users", userRouter);
-app.use("/goods", goodsRouter);
+app.use("/cars", carsRouter);
 app.use("/auth", authRouter);
 app.use("/file", filesRouter);
 

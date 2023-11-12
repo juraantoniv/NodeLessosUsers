@@ -11,7 +11,8 @@ import { configs } from "../configs/config";
 
 export enum EFileTypes {
     User = "user",
-    Car = "goods",
+    Goods = "goods",
+    Bought='bought'
 }
 
 class S3Service {

@@ -31,15 +31,15 @@ class UserController {
         }
     }
     async Update(req, res, next) {
+        const payload = req.res.locals.tokenPayload;
+        console.log(payload);
         try {
-            const { id, name } = req.body.data;
-            const user = await User_model_1.User.find({ _id: id });
+            const dto = req.body;
+            const user = await User_model_1.User.findOne({ _id: payload.userId });
             if (!user) {
                 throw new api_errors_1.ApiError("User not found", 404);
             }
-            const userForUpdate = user[0];
-            userForUpdate.email = name;
-            const us = await user_servise_1.userService.updateUser(id, userForUpdate);
+            const us = await user_servise_1.userService.updateUser(payload.userId, dto);
             return res.status(201).json(us);
         }
         catch (e) {

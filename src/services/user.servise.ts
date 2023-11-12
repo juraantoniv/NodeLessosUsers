@@ -25,6 +25,7 @@ class UserService {
 
     }
 
+
     public async uploadAvatar(avatar: fileUpload.UploadedFile, userId: Types.ObjectId):Promise<IUser>{
 
         const checkUser = await userRepository.findByID(userId);

@@ -2,6 +2,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.User = void 0;
 const mongoose_1 = require("mongoose");
+const users_rights_enum_1 = require("../enums/users.rights.enum");
 const userSchema = new mongoose_1.Schema({
     password: {
         type: String,
@@ -26,6 +27,16 @@ const userSchema = new mongoose_1.Schema({
     },
     last_Visited: {
         typeof: String,
+    },
+    rights: {
+        type: String,
+        enum: users_rights_enum_1.ERights,
+        default: users_rights_enum_1.ERights.Costumer
+    },
+    userPremiumRights: {
+        type: String,
+        enum: users_rights_enum_1.EType,
+        default: users_rights_enum_1.EType.Default
     }
 }, {
     timestamps: true,

@@ -1,6 +1,7 @@
 import { model, Schema } from "mongoose";
 import * as mongoose from "mongoose";
 import {IUser} from "../types/user.type";
+import {ERights, EType} from "../enums/users.rights.enum";
 
 
 const userSchema = new Schema(
@@ -28,6 +29,20 @@ const userSchema = new Schema(
         },
         last_Visited:{
             typeof :String,
+        },
+        city:{
+            type:String,
+            required:true,
+        },
+        rights:{
+            type:String,
+            enum:ERights,
+            default: ERights.Costumer
+        },
+        userPremiumRights:{
+            type:String,
+            enum: EType,
+            default:EType.Default
         }
     },
     {

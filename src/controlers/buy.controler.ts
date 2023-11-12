@@ -8,6 +8,7 @@ import {goodsRepository} from "../repositories/goods.repostitory";
 import {buyDataRepository} from "../repositories/bought.data.repository";
 
 
+
 class BuyController {
 
     public async getAllBuId ( req: Request, res: Response, next: NextFunction){
@@ -21,7 +22,7 @@ class BuyController {
             const entity = await tokenRepository.findOne({ accessToken });
             const payload = tokenService.checkToken(accessToken, "access");
 
-            const goods = await buyDataRepository.getByUserId(payload.userId.toString())
+            const goods = await goodsRepository.findByID(payload.userId)
 
             return res.status(201).json(goods);
         }

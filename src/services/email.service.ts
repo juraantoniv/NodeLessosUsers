@@ -49,6 +49,7 @@ class EmailService {
         emailAction: EEmailAction,
         context: Record<string, string | number> = {},
     ) {
+
         const { subject, templateName } = templates[emailAction];
 
 

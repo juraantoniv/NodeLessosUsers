@@ -1,14 +1,15 @@
 import { model, Schema, Types } from "mongoose";
 
 import {BoughtType} from "../types/goods.types";
-import {Goods} from "./goodsModel";
+import {Cars} from "./goodsModel";
+
 
 const BoughtSchema = new Schema(
     {
         _goodsId: {
             type: Types.ObjectId ,
             required: true,
-            ref: Goods,
+            ref: Cars,
         },
         name: {
             type: String,

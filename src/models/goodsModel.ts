@@ -1,31 +1,64 @@
 import { model, Schema } from "mongoose";
 import * as mongoose from "mongoose";
-import {IGoods} from "../types/goods.types";
+import {CurrencyType, IGoods} from "../types/goods.types";
+import {ERights} from "../enums/users.rights.enum";
+import {ECurrencyEnum} from "../enums/currency.enum";
+import {EActive} from "../enums/valiid.enum";
+import {ECars} from "../enums/cars.enum";
 
 
-const goodsSchema = new Schema(
+const carsSchema = new Schema(
     {
         userId: {
             type: String,
         },
-        name: {
+        model: {
             type: String,
+            enum: ECars
         },
         description: {
             type: String,
             required: true,
-            lowercase: true,
         },
         image:{
             type:String,
             required: false
         },
-        price: {
+        type_currency: {
             type:String,
             required: false
         },
+        currency:{
+            type:[],
+        },
         boughtBy:{
             type:String,
+            required:false
+        },
+        views:{
+            type:Number,
+            default:0,
+            required:false
+        },
+        likes:{
+            type:Number,
+            default:0,
+            required:false
+        },
+        dislikes:{
+            type:Number,
+            default:0,
+            required:false
+        },
+        active:{
+            type:String,
+            enum:EActive,
+            default:EActive.Nonactive,
+            required:false
+        },
+        countOfValid:{
+            type:Number,
+            default:0,
             required:false
         }
 
@@ -40,4 +73,4 @@ const goodsSchema = new Schema(
 
 
 
-export const Goods = model<IGoods>("goods", goodsSchema);
+export const Cars = model<IGoods>("cars", carsSchema);

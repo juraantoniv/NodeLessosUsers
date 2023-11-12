@@ -40,13 +40,13 @@ class TokenService {
 
     public generateTokenActive(payload: ITokenPayload): string {
        return jwt.sign(payload, configs.JWT_ACCESS_SECRET, {
-            expiresIn: "50s",
+            expiresIn: "5m",
         });
 
     }
     public generateTokenRecovery(payload: ITokenPayload): string {
         return jwt.sign(payload, configs.JWT_ACCESS_SECRET, {
-            expiresIn: "50s",
+            expiresIn: "5m",
         });
 
     }

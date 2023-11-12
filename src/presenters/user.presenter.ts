@@ -12,6 +12,10 @@ class UserPresenter implements IPresenter<IUser, Partial<IUser>> {
             name: data.name,
             age: data.age,
             email: data.email,
+            rights:data.rights,
+            city:data.city,
+            userPremiumRights:data.userPremiumRights,
+            last_Visited:data.last_Visited,
             confirmedRegistration: data.confirmedRegistration,
             avatar: `${configs.AWS_S3_URL}/${data.avatar}`,
         };
