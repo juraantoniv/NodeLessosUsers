@@ -1,5 +1,5 @@
 import { User } from "../models/User.model";
-import {IUser, IUserCredentials} from "../types/user.type";
+import {IUser, IUserCredentials, IUserCredentialsForSeller} from "../types/user.type";
 import {FilterQuery, Types, UpdateQuery} from "mongoose";
 import {ERights} from "../enums/users.rights.enum";
 
@@ -34,7 +34,7 @@ class UserRepository {
 
     }
 
-    public async register(dto: IUserCredentials): Promise<IUser> {
+    public async register(dto: IUserCredentialsForSeller): Promise<IUser> {
         return await User.create(dto);
     }
 

@@ -17,3 +17,4 @@ export interface IUser extends Document {
 }
 
 export type IUserCredentials = Pick<IUser, "email" | "password" | "confirmedRegistration">;
+export type IUserCredentialsForSeller = Pick<IUser, "email" | "password" | "confirmedRegistration" |"rights">;

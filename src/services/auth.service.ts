@@ -2,13 +2,14 @@ import {userRepository} from "../repositories/user.repository";
 import {ApiError} from "../errors/api.errors";
 import {IUserCredentials} from "../types/user.type";
 import {passwordService} from "./password.service";
-import {IToken, ITokenPayload, ITokensPair} from "../types/token.types";
+import {ITokenPayload, ITokensPair} from "../types/token.types";
 import {User} from "../models/User.model";
 import {tokenService} from "./tocken.service";
 import {tokenRepository} from "../repositories/token.repository";
 import {emailService} from "./email.service";
 import {EEmailAction} from "../enums/email.action.enum";
 import {tokenActiveRepository} from "../repositories/active.TokensRepository";
+import {ERights} from "../enums/users.rights.enum";
 
 class AuthService {
     public async register(dto: IUserCredentials): Promise<void> {
@@ -16,6 +17,19 @@ class AuthService {
             const hashedPassword = await passwordService.hash(dto.password);
            const user = await userRepository.register({...dto,password:hashedPassword, confirmedRegistration:false});
            const token=tokenService.generateTokenActive({userId:user._id,name:user.name})
+            await tokenActiveRepository.create({token:token,_userId:user._id})
+            await emailService.sendMail(user.email,EEmailAction.REGISTER,{name:user.name, token:token})
+
+        } catch (e) {
+            throw new ApiError(e.message, e.status);
+        }
+    }
+
+    public async registerSeller(dto: IUserCredentials): Promise<void> {
+        try {
+            const hashedPassword = await passwordService.hash(dto.password);
+            const user = await userRepository.register({...dto,password:hashedPassword, confirmedRegistration:false,rights:ERights.Seller });
+            const token=tokenService.generateTokenActive({userId:user._id,name:user.name})
             await tokenActiveRepository.create({token:token,_userId:user._id})
             await emailService.sendMail(user.email,EEmailAction.REGISTER,{name:user.name, token:token})
 

@@ -33,6 +33,23 @@ class AuthController {
             next(e);
         }
     }
+    public async registerSeller(
+        req: Request,
+        res: Response,
+        next: NextFunction,
+    ): Promise<Response<void>> {
+        try {
+            const { error, value } = UserValidator.register.validate(req.body);
+            await authService.registerSeller(value)
+            if (error) {
+                throw new ApiError(error.message, 400);
+            }
+            return res.status(201).json('User Created');
+        } catch (e) {
+            next(e);
+        }
+    }
+
     public async login(
         req: Request,
         res: Response,

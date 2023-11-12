@@ -14,7 +14,7 @@ router.get("/getById/:id",authMiddleware.checkAccessToken, goodsController.findB
 router.post("/buy",authMiddleware.checkAccessToken, goodsController.buyGoods);
 router.get("/getUsersCars", buyController.getAllBuId);
 router.post("",cardMiddleware.postCar,authMiddlewareForCheck.checkRightsOfUser(ERights.Seller),goodsController.Create);
-router.delete("",userMiddlewareForDel.deleteThrow,authMiddlewareForCheck.checkRightsOfUser(ERights.Seller),authMiddlewareForCheck.checkRightsOfUser(ERights.Admin),goodsController.Delete);
+router.delete("",userMiddlewareForDel.deleteThrow,authMiddlewareForCheck.checkRightsOfUser(ERights.Seller),goodsController.Delete);
 router.patch("",authMiddleware.checkAccessToken,goodsController.Update);
 router.get(":name",authMiddleware.checkAccessToken,goodsController.findByName);
 router.get("/likes/:id",authMiddleware.checkAccessToken,goodsController.likes);
