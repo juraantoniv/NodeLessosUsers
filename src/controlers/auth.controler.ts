@@ -70,6 +70,22 @@ class AuthController {
             next(e);
         }
     }
+    public async registerManager(
+        req: Request,
+        res: Response,
+        next: NextFunction,
+    ): Promise<Response<void>> {
+        try {
+            const { error, value } = UserValidator.register.validate(req.body);
+            await authService.registerManager(value)
+            if (error) {
+                throw new ApiError(error.message, 400);
+            }
+            return res.status(201).json('User Created');
+        } catch (e) {
+            next(e);
+        }
+    }
     public async logout(
         req: Request,
         res: Response,

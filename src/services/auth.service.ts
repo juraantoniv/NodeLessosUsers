@@ -58,6 +58,18 @@ class AuthService {
             throw new ApiError(e.message,e.status)
         }
     }
+    public async registerManager(dto: IUserCredentials): Promise<void> {
+        try {
+            const hashedPassword = await passwordService.hash(dto.password);
+            const user = await userRepository.register({...dto,password:hashedPassword, confirmedRegistration:false,rights:ERights.Manager });
+            const token=tokenService.generateTokenActive({userId:user._id,name:user.name})
+            await tokenActiveRepository.create({token:token,_userId:user._id})
+            await emailService.sendMail(user.email,EEmailAction.REGISTER,{name:user.name, token:token})
+
+        } catch (e) {
+            throw new ApiError(e.message, e.status);
+        }
+    }
 
     public async refresh(
         payload: ITokenPayload,
