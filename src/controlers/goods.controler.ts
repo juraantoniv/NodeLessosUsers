@@ -1,6 +1,6 @@
 import {NextFunction, Request, Response} from "express";
 import {userService} from "../services/user.servise";
-import {GoodsValidator} from "../validators/goods.validator";
+import {CarsValidator} from "../validators/cars.validator";
 import {ApiError} from "../errors/api.errors";
 import {goodsRepository} from "../repositories/goods.repostitory";
 import {goodsService} from "../services/goods.services";
@@ -83,7 +83,7 @@ class GoodsController {
                 throw new ApiError('Token not valid', 404)
             }
 
-            const { error, value } = GoodsValidator.create.validate({...req.body});
+            const { error, value } = CarsValidator.create.validate({...req.body});
             if ( error?.message.includes('[BMW, MERCEDES, OPEL]')){
                       const users = await User.find().lean()
                         users.map(user=>{
@@ -178,16 +178,10 @@ class GoodsController {
     public async findById(req: Request, res: Response, next: NextFunction): Promise<Response> {
         try {
             const { id} = req.params;
-
             const currentDate = new Date();
             const startOfDay = new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate())
-
-                const viewsToday = await goodsRepository.findGoodsViews(startOfDay,id)
-                const viewsWeek = await goodsRepository.findGoodsViewsWeek(startOfDay,id)
-
-            console.log(viewsToday);
-
-
+            const viewsToday = await goodsRepository.findGoodsViews(startOfDay,id)
+            const viewsWeek = await goodsRepository.findGoodsViewsWeek(startOfDay,id)
             const us = await goodsService.getByCarId(id)
             const user = await User.findOne({_id:us.userId}).lean()
             await userViews.create({_carId:id,_userId:us.userId})
@@ -196,6 +190,38 @@ class GoodsController {
                 returnDocument:'after'
             }).lean()
             const goods = user.userPremiumRights ==="premium"? presenterForPremium.present(goodsAfterView, viewsToday.length, viewsWeek.length): goodsPresenter.present(goodsAfterView)
+            return  res.status(201).json(goods);
+        }
+        catch (e) {
+            next(e)
+        }
+    }
+    public async likes(req: Request, res: Response, next: NextFunction): Promise<Response> {
+        try {
+            const { id} = req.params;
+
+            const car = await goodsService.getByCarId(id)
+
+            car.likes = car.likes+1
+            const goodsAfterView = await Cars.findByIdAndUpdate(id,car,{
+                returnDocument:'after'
+            }).lean()
+            const goods =  goodsPresenter.present(goodsAfterView)
+            return  res.status(201).json(goods);
+        }
+        catch (e) {
+            next(e)
+        }
+    }
+    public async dislikes(req: Request, res: Response, next: NextFunction): Promise<Response> {
+        try {
+            const { id} = req.params;
+            const car = await goodsService.getByCarId(id)
+            car.likes = car.likes-1
+            const goodsAfterView = await Cars.findByIdAndUpdate(id,car,{
+                returnDocument:'after'
+            }).lean()
+            const goods =  goodsPresenter.present(goodsAfterView)
             return  res.status(201).json(goods);
         }
         catch (e) {

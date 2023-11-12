@@ -1,7 +1,7 @@
 import joi from "joi";
 import {ECars} from "../enums/cars.enum";
 
-export class GoodsValidator {
+export class CarsValidator {
     static goodsName = joi.string().min(2).max(50).trim();
     static description = joi.string().min(5).required();
     static image = joi.binary().optional()

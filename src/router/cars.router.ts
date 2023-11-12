@@ -17,6 +17,8 @@ router.post("",cardMiddleware.postCar,authMiddlewareForCheck.checkRightsOfUser(E
 router.delete("",userMiddlewareForDel.deleteThrow,authMiddlewareForCheck.checkRightsOfUser(ERights.Seller),authMiddlewareForCheck.checkRightsOfUser(ERights.Admin),goodsController.Delete);
 router.patch("",authMiddleware.checkAccessToken,goodsController.Update);
 router.get(":name",authMiddleware.checkAccessToken,goodsController.findByName);
+router.get("/likes/:id",authMiddleware.checkAccessToken,goodsController.likes);
+router.get("/dislikes/:id",authMiddleware.checkAccessToken,goodsController.dislikes);
 
 
 

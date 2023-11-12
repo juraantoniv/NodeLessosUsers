@@ -10,6 +10,8 @@ import {filesRouter} from "./router/files.router";
 import {cronRunner} from "./crons";
 import {carsRouter} from "./router/cars.router";
 
+
+
 const app = express();
 app.use(cors())
 app.use(fileUpload());
@@ -29,6 +31,7 @@ app.use("/users", userRouter);
 app.use("/cars", carsRouter);
 app.use("/auth", authRouter);
 app.use("/file", filesRouter);
+
 
 
 app.use((err:any, req:Request, res:Response, next:NewableFunction)=>{
