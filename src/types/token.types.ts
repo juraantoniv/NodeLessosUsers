@@ -3,23 +3,22 @@ import { Document, Types } from "mongoose";
 import { IUser } from "./user.type";
 
 export interface ITokenPayload {
-    userId: Types.ObjectId;
-    name: string;
+  userId: Types.ObjectId;
+  name: string;
 }
 
 export interface ITokensPair {
-    accessToken: string;
-    refreshToken: string;
+  accessToken: string;
+  refreshToken: string;
 }
 
 export interface IToken extends Document {
-    accessToken: string;
-    refreshToken: string;
-    _userId: Types.ObjectId | IUser;
+  accessToken: string;
+  refreshToken: string;
+  _userId: Types.ObjectId | IUser;
 }
 
 export interface ITokenActive extends Document {
-    token: string;
-    _userId: Types.ObjectId | string;
+  token: string;
+  _userId: Types.ObjectId | string;
 }
-

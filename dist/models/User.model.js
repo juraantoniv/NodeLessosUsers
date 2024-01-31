@@ -23,21 +23,25 @@ const userSchema = new mongoose_1.Schema({
     },
     avatar: {
         type: String,
-        required: false
+        required: false,
     },
     last_Visited: {
         typeof: String,
     },
+    city: {
+        type: String,
+        required: true,
+    },
     rights: {
         type: String,
         enum: users_rights_enum_1.ERights,
-        default: users_rights_enum_1.ERights.Costumer
+        default: users_rights_enum_1.ERights.Costumer,
     },
     userPremiumRights: {
         type: String,
         enum: users_rights_enum_1.EType,
-        default: users_rights_enum_1.EType.Default
-    }
+        default: users_rights_enum_1.EType.Default,
+    },
 }, {
     timestamps: true,
     versionKey: false,

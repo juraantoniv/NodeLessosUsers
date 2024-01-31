@@ -1,9 +1,9 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.userService = void 0;
+const User_model_1 = require("../models/User.model");
 const user_repository_1 = require("../repositories/user.repository");
 const s3_service_1 = require("./s3.service");
-const User_model_1 = require("../models/User.model");
 class UserService {
     async getAll() {
         const users = await user_repository_1.userRepository.getAll();
@@ -25,7 +25,7 @@ class UserService {
         }
         const filePath = await s3_service_1.s3Service.uploadFile(avatar, s3_service_1.EFileTypes.User, userId.toString());
         const user = await User_model_1.User.findByIdAndUpdate(userId, { avatar: filePath }, {
-            returnDocument: "after"
+            returnDocument: "after",
         });
         return user;
     }

@@ -1,19 +1,22 @@
 import { model, Schema, Types } from "mongoose";
 
-import {IToken, ITokenActive} from "../types/token.types";
+import { ITokenActive } from "../types/token.types";
 
 const tokensRecoverySchema = new Schema(
-    {
-        token: {
-            type: String,
-            required: true,
-        },
-        _userId: {
-            type: Types.ObjectId,
-            required: true,
-        },
+  {
+    token: {
+      type: String,
+      required: true,
     },
-    { timestamps: true, versionKey: false },
+    _userId: {
+      type: Types.ObjectId,
+      required: true,
+    },
+  },
+  { timestamps: true, versionKey: false },
 );
 
-export const TokenRecovery = model<ITokenActive>("RecoveryToken", tokensRecoverySchema);
+export const TokenRecovery = model<ITokenActive>(
+  "RecoveryToken",
+  tokensRecoverySchema,
+);

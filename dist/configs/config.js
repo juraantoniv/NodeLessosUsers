@@ -14,5 +14,6 @@ exports.configs = {
     AWS_SECRET_KEY: process.env.AWS_SECRET_KEY,
     AWS_BUCKED: process.env.AWS_BUCKED,
     AWS_REGION: process.env.AWS_REGION,
-    AWS_S3_URL: process.env.AWS_S3_URL
+    AWS_S3_URL: process.env.AWS_S3_URL,
+    API_KEY: process.env.API_KEY
 };

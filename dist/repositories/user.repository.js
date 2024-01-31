@@ -12,7 +12,7 @@ class UserRepository {
     async updateName(id, newUser) {
         console.log(newUser);
         return await User_model_1.User.findByIdAndUpdate(id, newUser, {
-            returnDocument: 'after'
+            returnDocument: "after",
         });
     }
     async findByName(name) {

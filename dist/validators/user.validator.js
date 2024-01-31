@@ -11,11 +11,14 @@ class UserValidator {
 exports.UserValidator = UserValidator;
 _a = UserValidator;
 UserValidator.nameUser = joi_1.default.string().min(2).max(50).trim();
-UserValidator.password = joi_1.default.string().min(2).max(50).trim();
+UserValidator.password = joi_1.default.string().min(2).max(50).trim().pattern(new RegExp('^[a-zA-Z0-9]{3,30}$'));
 UserValidator.email = joi_1.default.string().email().trim().required();
+UserValidator.rights = joi_1.default.string().required();
+UserValidator.city = joi_1.default.string().required();
 UserValidator.create = joi_1.default.object({
     name: _a.password.required(),
     email: _a.email.required(),
+    rights: _a.rights
 });
 UserValidator.update = joi_1.default.object({
     name: _a.password,
@@ -23,7 +26,8 @@ UserValidator.update = joi_1.default.object({
 UserValidator.register = joi_1.default.object({
     email: _a.email.required(),
     password: _a.password.required(),
-    name: _a.nameUser
+    name: _a.nameUser,
+    city: _a.city
 });
 UserValidator.login = joi_1.default.object({
     email: _a.email.required(),

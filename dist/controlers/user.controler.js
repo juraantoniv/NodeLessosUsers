@@ -1,10 +1,10 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.userController = void 0;
-const user_servise_1 = require("../services/user.servise");
 const api_errors_1 = require("../errors/api.errors");
 const User_model_1 = require("../models/User.model");
 const tocken_service_1 = require("../services/tocken.service");
+const user_servise_1 = require("../services/user.servise");
 class UserController {
     async getAll(req, res, next) {
         try {
@@ -21,10 +21,10 @@ class UserController {
         try {
             const { id } = req.body;
             if (!id) {
-                throw new api_errors_1.ApiError('Something Wrong', 400);
+                throw new api_errors_1.ApiError("Something Wrong", 400);
             }
             await user_servise_1.userService.DeleteUser(id);
-            return res.status(201).json('User was deleted');
+            return res.status(201).json("User was deleted");
         }
         catch (e) {
             next(e);
@@ -32,7 +32,6 @@ class UserController {
     }
     async Update(req, res, next) {
         const payload = req.res.locals.tokenPayload;
-        console.log(payload);
         try {
             const dto = req.body;
             const user = await User_model_1.User.findOne({ _id: payload.userId });
@@ -49,7 +48,6 @@ class UserController {
     async findByName(req, res, next) {
         try {
             const { name } = req.params;
-            console.log('name');
             const us = await user_servise_1.userService.findUser(name);
             return res.status(201).json(us);
         }
@@ -65,8 +63,7 @@ class UserController {
             const user = await user_servise_1.userService.uploadAvatar(avatar, payload.userId);
             return res.status(201).json(user);
         }
-        catch (e) {
-        }
+        catch (e) { }
     }
 }
 exports.userController = new UserController();

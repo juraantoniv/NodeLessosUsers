@@ -1,9 +1,9 @@
-import {removeOldTokens} from "./remove.old.tokens";
-import {updateCurrency} from "./update.currency";
-import {checkValidBody} from "./check.valid";
+import { checkValidBody } from "./check.valid";
+import { removeOldTokens } from "./remove.old.tokens";
+import { updateCurrency } from "./update.currency";
 
 export const cronRunner = () => {
-    removeOldTokens.start();
-    updateCurrency.start();
-    checkValidBody.start();
+  removeOldTokens.start();
+  updateCurrency.start();
+  checkValidBody.start();
 };

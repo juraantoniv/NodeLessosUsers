@@ -1,4 +1,4 @@
 export enum EActive {
-    Nonactive = "nonActive",
-    Active = "active",
+  Nonactive = "nonActive",
+  Active = "active",
 }
