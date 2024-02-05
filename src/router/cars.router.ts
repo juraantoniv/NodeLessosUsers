@@ -36,12 +36,12 @@ router.get(
   authMiddleware.checkAccessToken,
   goodsController.findByName,
 );
-router.get(
+router.post(
   "/likes/:id",
   authMiddleware.checkAccessToken,
   goodsController.likes,
 );
-router.get(
+router.post(
   "/dislikes/:id",
   authMiddleware.checkAccessToken,
   goodsController.dislikes,

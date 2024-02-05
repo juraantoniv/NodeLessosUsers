@@ -1,0 +1,382 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "version": "1.0.0",
+    "title": "Your API",
+    "description": "API documentation for your application"
+  },
+  "tags": [
+    { "name": "Cars", "description": "Get all Cars" },
+    { "name": "Authentication", "description": "Operations related to user authentication" }
+  ],
+  "paths": {
+    "/cars": {
+      "get": {
+        "tags": ["Cars"],
+        "summary": "Get all cars",
+        "parameters": [
+          {
+            "name": "page",
+            "in": "query",
+            "description": "get current page",
+            "required": false,
+            "type": "number",
+            "default": 1
+          },
+          {
+            "name": "currency",
+            "in": "query",
+            "description": "set currency ",
+            "required": false,
+            "type": "string",
+            "enum": ["UAH", "EUR", "USD"]
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "description": "set limit per page ",
+            "required": false,
+            "type": "string",
+            "default": 5
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/Car"
+              }
+            }
+          }
+        }
+      }
+
+    },
+    "/cars/": {
+      "post": {
+        "tags": ["Cars"],
+        "summary": "Post a car",
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "identify your rights",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "image",
+            "in": "formData",
+            "description": "image of car",
+            "required": false,
+            "type": "file"
+          },
+          {
+            "name": "description",
+            "in": "body",
+            "description": "tell about you car ",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "type_currency",
+            "in": "query",
+            "description": "set currency ",
+            "required": false,
+            "type": "string",
+            "enum": ["UAH", "EUR", "USD"]
+          },
+          {
+            "name": "currency",
+            "in": "body",
+            "description": "set price of car ",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "model",
+            "in": "body",
+            "description": "brand of car",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/Car"
+              }
+            }
+          }
+        }
+      }
+
+    },
+    "/updateCar": {
+      "patch": {
+        "tags": ["Cars"],
+        "summary": "Update a car",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "query",
+            "description": "car id",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "image",
+            "in": "formData",
+            "description": "image of car",
+            "required": false,
+            "type": "file"
+          },
+          {
+            "name": "description",
+            "in": "body",
+            "description": "tell about you car ",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "type_currency",
+            "in": "query",
+            "description": "set currency ",
+            "required": false,
+            "type": "string",
+            "enum": ["UAH", "EUR", "USD"]
+          },
+          {
+            "name": "currency",
+            "in": "body",
+            "description": "set price of car ",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "model",
+            "in": "body",
+            "description": "brand of car",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/Car"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/cars/getById/{id}": {
+      "get": {
+        "tags": ["Cars"],
+        "summary": "Get by id",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "query",
+            "description": "get cars by id",
+            "required": true,
+            "type": "number"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Get a car",
+            "schema": {
+              "type": "object",
+              "$ref": "#/definitions/Car"
+            }
+          }
+        }
+      }
+
+    },
+    "/cars/buy": {
+      "post": {
+        "tags": ["Cars"],
+        "summary": "Buy",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "body",
+            "description": "buy a car",
+            "required": true,
+            "type": "number"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Get a car after buy",
+            "schema": {
+              "type": "object",
+              "$ref": "#/definitions/Car"
+            }
+          }
+        }
+      }
+
+    },
+    "/cars/getUsersCars": {
+      "get": {
+        "tags": ["Cars"],
+        "summary": "Seller cars",
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "Get seller cars for sell",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Get seller cars",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/Car"
+              }
+            }
+          }
+        }
+      }
+
+    },
+    "/": {
+      "delete": {
+        "tags": ["Cars"],
+        "summary": "Delete a car",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "body",
+            "description": "Delete a car by id ",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Delete current car",
+            "schema": {
+              "type": "string"
+
+            },
+            "examples": {
+              "application/json": {
+                "info": "Car was deleted"
+              }
+            }
+          }
+        }
+      }
+
+    },
+    "/cars/likes/{id}": {
+      "post": {
+        "tags": ["Cars"],
+        "summary": "Like a car",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "query",
+            "description": "Like a car",
+            "required": true,
+            "type": "number"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Get a car",
+            "schema": {
+              "type": "object",
+              "$ref": "#/definitions/Car"
+            }
+          }
+        }
+      }
+
+    },
+    "/cars/dislikes/{id}": {
+      "post": {
+        "tags": ["Cars"],
+        "summary": "Dislikes a car",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "query",
+            "description": "Dislike a car",
+            "required": true,
+            "type": "number"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Get a car",
+            "schema": {
+              "type": "object",
+              "$ref": "#/definitions/Car"
+            }
+          }
+        }
+      }
+
+    }
+  },
+  "definitions": {
+    "User": {
+      "type": "object",
+      "properties": {
+      }
+    },
+    "Car": {
+      "type": "object",
+      "properties": {
+        "_id":{
+          "type": "string"
+        },
+        "userId": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        },
+        "type_currency": {
+          "type": "string",
+          "enum": ["UAH", "EUR", "USD"]
+        },
+        "image": {
+          "type": "string"
+        },
+        "description": {
+          "type": "string"
+        },
+        "boughtBy": {
+          "type": "string"
+        },
+        "likes": {
+          "type": "string"
+        },
+        "views": {
+          "type": "string"
+        }
+      }
+    }
+  }
+}
+
+

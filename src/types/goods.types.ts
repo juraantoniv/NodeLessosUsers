@@ -6,7 +6,7 @@ export interface IGoods extends Document {
   name?: string;
   description?: string;
   image?: string;
-  currency: any;
+  currency: string;
   type_currency?: string;
   boughtBy?: Types.ObjectId;
   views?: number;
