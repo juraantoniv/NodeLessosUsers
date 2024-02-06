@@ -13,7 +13,7 @@ class UserService {
     return users;
   }
 
-  public async DeleteUser(id: string): Promise<void> {
+  public async deleteUser(id: string): Promise<void> {
     await userRepository.Delete(id);
   }
   public async updateUser(id: string, user: any): Promise<IUser> {

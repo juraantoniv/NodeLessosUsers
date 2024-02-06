@@ -44,11 +44,11 @@ class UserService {
       throw new ApiError(e.message, e.status);
     }
   }
-  public async Create(user: IGoods): Promise<IGoods> {
+  public async create(user: IGoods): Promise<IGoods> {
     return await goodsRepository.Create(user);
   }
 
-  public async DeleteGood(id: string): Promise<void> {
+  public async deleteGood(id: string): Promise<void> {
     await goodsRepository.Delete(id);
   }
   public async updateGood(id: string, user: IGoods): Promise<IGoods> {

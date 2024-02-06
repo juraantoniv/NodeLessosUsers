@@ -32,7 +32,7 @@ class UserController {
       if (!id) {
         throw new ApiError("Something Wrong", 400);
       }
-      await userService.DeleteUser(id);
+      await userService.deleteUser(id);
       return res.status(201).json("User was deleted");
     } catch (e) {
       next(e);

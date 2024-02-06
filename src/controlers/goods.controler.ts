@@ -126,7 +126,7 @@ class GoodsController {
           EUR: Math.ceil(Number(value.currency) / Number(course.data[1].sale)),
         },
       );
-      const newGood = await goodsService.Create({ ...value, currency: arr });
+      const newGood = await goodsService.create({ ...value, currency: arr });
       const filePath = await s3Service.uploadFile(
         file,
         EFileTypes.Goods,
@@ -156,7 +156,7 @@ class GoodsController {
       if (!id) {
         throw new ApiError("Something Wrong", 400);
       }
-      await goodsService.DeleteGood(id);
+      await goodsService.deleteGood(id);
       return res.status(201).json("Car was deleted");
     } catch (e) {
       next(e);
