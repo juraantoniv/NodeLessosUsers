@@ -136,9 +136,7 @@
             "description": "register",
             "required": true,
             "name": "Authorization",
-            "schema": {
-              "$ref": "#/definitions/user"
-            }
+            "type": "string"
           }
         ],
         "responses": {
