@@ -7,7 +7,8 @@
   },
   "tags": [
     { "name": "Cars", "description": "Cars and CORS operations " },
-    { "name": "Authentication", "description": "Operations related to user authentication" }
+    { "name": "Authentication", "description": "Operations related to user authentication" },
+    { "name": "Admin", "description": "Operations related to admin " }
   ],
   "paths": {
     "/auth/login": {
@@ -43,6 +44,60 @@
           {
             "in": "body",
             "description": "register",
+            "required": true,
+            "name": "body",
+            "schema": {
+              "$ref": "#/definitions/createUser"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "User created",
+            "schema": {
+              "type": "object",
+              "$ref": "#/definitions/user"
+            }
+          }
+        }
+      }
+
+    },
+    "/auth/sellerRegister": {
+      "post": {
+        "tags": ["Admin"],
+        "summary": "Register user",
+        "parameters": [
+          {
+            "in": "body",
+            "description": "register seller",
+            "required": true,
+            "name": "body",
+            "schema": {
+              "$ref": "#/definitions/createUser"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "User created",
+            "schema": {
+              "type": "object",
+              "$ref": "#/definitions/user"
+            }
+          }
+        }
+      }
+
+    },
+    "/auth/managerRegister": {
+      "post": {
+        "tags": ["Admin"],
+        "summary": "Register user",
+        "parameters": [
+          {
+            "in": "body",
+            "description": "register manager",
             "required": true,
             "name": "body",
             "schema": {
