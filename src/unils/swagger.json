@@ -6,10 +6,191 @@
     "description": "API documentation for your application"
   },
   "tags": [
-    { "name": "Cars", "description": "Get all Cars" },
+    { "name": "Cars", "description": "Cars and CORS operations " },
     { "name": "Authentication", "description": "Operations related to user authentication" }
   ],
   "paths": {
+    "/auth/login": {
+      "post": {
+        "tags": ["Authentication"],
+        "summary": "Login",
+        "parameters": [
+          {
+            "name": "email and password",
+            "in": "body",
+            "description": "User's email and password",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Get tokens",
+            "schema": {
+              "type": "object",
+              "$ref": "#/definitions/TokenResponse"
+            }
+          }
+        }
+      }
+
+    },
+    "/auth/register": {
+      "post": {
+        "tags": ["Authentication"],
+        "summary": "Register user",
+        "parameters": [
+          {
+            "in": "body",
+            "description": "register",
+            "required": true,
+            "name": "body",
+            "schema": {
+              "$ref": "#/definitions/createUser"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "User created",
+            "schema": {
+              "type": "object",
+              "$ref": "#/definitions/user"
+            }
+          }
+        }
+      }
+
+    },
+    "/auth/me": {
+      "get": {
+        "tags": ["Authentication"],
+        "summary": "Info about user",
+        "parameters": [
+          {
+            "in": "header",
+            "description": "register",
+            "required": true,
+            "name": "Authorization",
+            "schema": {
+              "$ref": "#/definitions/user"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "User info",
+            "schema": {
+              "type": "object",
+              "$ref": "#/definitions/user"
+            }
+          }
+        }
+      }
+    },
+    "/auth/logout": {
+      "get": {
+        "tags": ["Authentication"],
+        "summary": "Logout",
+        "parameters": [
+          {
+            "in": "header",
+            "description": "Logout user",
+            "required": true,
+            "name": "Authorization",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Logout succeed"
+          }
+        }
+      }
+    },
+    "/auth/changePassword": {
+      "get": {
+        "tags": ["Authentication"],
+        "summary": "Change user's  password",
+        "parameters": [
+          {
+            "in": "body",
+            "description": "Change user's  password",
+            "required": true,
+            "name": "Authorization",
+            "schema": {
+              "properties": {
+                "old_password":{
+                "type": "string"
+                },
+                "password":{
+                  "type": "string"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Password was changed"
+          }
+        }
+      }
+    },
+    "/auth/refresh": {
+      "get": {
+        "tags": [
+          "Authentication"
+        ],
+        "summary": "Get refresh token",
+        "parameters": [
+          {
+            "in": "header",
+            "description": "refresh token",
+            "required": true,
+            "name": "Refresh",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "User info",
+            "schema": {
+              "type": "object",
+              "$ref": "#/definitions/TokenResponse"
+            }
+          }
+        }
+      }
+    },
+    "/auth/confirmPassword": {
+      "get": {
+        "tags": [
+          "Authentication"
+        ],
+        "summary": "Confirm password",
+        "parameters": [
+          {
+            "in": "body",
+            "description": "Active token",
+            "required": true,
+            "name": "token",
+            "schema": {
+              "properties": {
+                "token": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Password was activated"
+          }
+        }
+      }
+    },
     "/cars": {
       "get": {
         "tags": ["Cars"],
@@ -137,34 +318,15 @@
             "type": "file"
           },
           {
-            "name": "description",
             "in": "body",
-            "description": "tell about you car ",
+            "description": "car body",
             "required": true,
-            "type": "string"
-          },
-          {
-            "name": "type_currency",
-            "in": "query",
-            "description": "set currency ",
-            "required": false,
-            "type": "string",
-            "enum": ["UAH", "EUR", "USD"]
-          },
-          {
-            "name": "currency",
-            "in": "body",
-            "description": "set price of car ",
-            "required": true,
-            "type": "string"
-          },
-          {
-            "name": "model",
-            "in": "body",
-            "description": "brand of car",
-            "required": true,
-            "type": "string"
+            "name": "body",
+            "schema": {
+              "$ref": "#/definitions/update"
+            }
           }
+
         ],
         "responses": {
           "200": {
@@ -338,9 +500,92 @@
     }
   },
   "definitions": {
-    "User": {
+    "update": {
       "type": "object",
       "properties": {
+        "name": {
+          "description": "tell about you car ",
+          "type": "string"
+        },
+        "type_currency": {
+          "type": "string",
+          "enum": ["UAH", "EUR", "USD"]
+        },
+        "currency": {
+          "description": "set price of car ",
+          "type": "integer"
+        },
+        "model": {
+          "description": "brand of car",
+          "type": "string"
+        }
+      }
+    },
+    "createUser": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "User name"
+        },
+        "email": {
+          "type": "string",
+          "description": "User email"
+        },
+        "password": {
+          "type": "string",
+          "description": "User password"
+        },
+        "city": {
+          "type": "string",
+          "description": "User city"
+        },
+        "age": {
+          "type": "string",
+          "description": "User age"
+        }
+      }
+    },
+    "user": {
+      "type": "object",
+      "properties": {
+        "_id": {
+          "type": "string",
+          "description": "User id"
+        },
+        "name": {
+          "type": "string",
+          "description": "User name"
+        },
+        "email": {
+          "type": "string",
+          "description": "User email"
+        },
+        "password": {
+          "type": "string",
+          "description": "User password"
+        },
+        "city": {
+          "type": "string",
+          "description": "User city"
+        },
+        "age": {
+          "type": "string",
+          "description": "User age"
+        }
+      }
+    },
+    "TokenResponse": {
+      "type": "object",
+      "properties": {
+        "accessToken": {
+          "type": "string",
+          "description": "Access token for authentication"
+        },
+        "refreshToken": {
+          "type": "string",
+          "description": "Refresh token for authentication"
+        }
       }
     },
     "Car": {

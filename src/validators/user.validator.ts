@@ -11,6 +11,7 @@ export class UserValidator {
   static email = joi.string().email().trim().required();
   static rights = joi.string().required();
   static city = joi.string().required();
+  static age = joi.number().min(1).max(150);
 
   static create = joi.object({
     name: this.password.required(),
@@ -26,6 +27,7 @@ export class UserValidator {
     password: this.password.required(),
     name: this.nameUser,
     city: this.city,
+    age: this.age.required(),
   });
   static login = joi.object({
     email: this.email.required(),

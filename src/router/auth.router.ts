@@ -29,7 +29,7 @@ router.get(
   authController.refresh,
 );
 router.post(
-  "/confirmPassword",
+  "/changePassword",
   authMiddleware.checkActiveToken,
   authController.recordPassword,
 );

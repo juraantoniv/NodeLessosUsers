@@ -168,7 +168,7 @@ class AuthController {
         name: user.name,
         token: token,
       });
-      return res.status(201).json("Password was changed");
+      return res.status(201).json("Password was activated");
     } catch (e) {
       next(e);
     }

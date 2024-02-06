@@ -34,7 +34,7 @@ class GoodsController {
       const goods = await goodsService.getAllWithPagination(
         req.query as IQuery,
       );
-      const goodsImag = await goodsPresenterForMany.present(goods);
+      const goodsImag = goodsPresenterForMany.present(goods);
       return res.json(goodsImag);
     } catch (e) {
       next(e);

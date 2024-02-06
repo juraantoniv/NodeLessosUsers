@@ -29,7 +29,6 @@ app.use("/users", userRouter);
 app.use("/cars", carsRouter);
 app.use("/auth", authRouter);
 app.use("/file", filesRouter);
-
 app.use("/swagger", swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
 app.use((err: any, req: Request, res: Response, next: NewableFunction) => {
