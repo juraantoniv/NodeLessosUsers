@@ -297,7 +297,7 @@
       }
 
     },
-    "/cars/": {
+    "/cars/create": {
       "post": {
         "tags": ["Cars"],
         "summary": "Post a car",
@@ -360,7 +360,7 @@
       }
 
     },
-    "/updateCar": {
+    "/cars/updateCar": {
       "patch": {
         "tags": ["Cars"],
         "summary": "Update a car",
@@ -438,7 +438,13 @@
             "in": "body",
             "description": "buy a car",
             "required": true,
-            "type": "number"
+            "schema": {
+              "properties": {
+                "id": {
+                  "type": "string"
+                }
+              }
+            }
           }
         ],
         "responses": {
@@ -480,7 +486,7 @@
       }
 
     },
-    "/": {
+    "/cars/delete": {
       "delete": {
         "tags": ["Cars"],
         "summary": "Delete a car",

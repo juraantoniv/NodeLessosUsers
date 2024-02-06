@@ -19,18 +19,18 @@ router.get(
 router.post("/buy", authMiddleware.checkAccessToken, goodsController.buyGoods);
 router.get("/getUsersCars", buyController.getAllBuId);
 router.post(
-  "",
+  "/create",
   cardMiddleware.postCar,
   authMiddlewareForCheck.checkRightsOfUser(ERights.Seller),
   goodsController.Create,
 );
 router.delete(
-  "",
+  "/delete",
   userMiddlewareForDel.deleteThrow,
   authMiddlewareForCheck.checkRightsOfUser(ERights.Seller),
   goodsController.Delete,
 );
-router.patch("", authMiddleware.checkAccessToken, goodsController.Update);
+router.patch("updateCar/", authMiddleware.checkAccessToken, goodsController.Update);
 router.get(
   ":name",
   authMiddleware.checkAccessToken,
