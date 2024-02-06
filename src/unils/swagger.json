@@ -144,7 +144,7 @@
       }
     },
     "/auth/logout": {
-      "get": {
+      "post": {
         "tags": ["Authentication"],
         "summary": "Logout",
         "parameters": [
@@ -164,7 +164,7 @@
       }
     },
     "/auth/changePassword": {
-      "get": {
+      "post": {
         "tags": ["Authentication"],
         "summary": "Change user's  password",
         "parameters": [
@@ -193,7 +193,7 @@
       }
     },
     "/auth/refresh": {
-      "get": {
+      "post": {
         "tags": [
           "Authentication"
         ],
@@ -219,7 +219,7 @@
       }
     },
     "/auth/confirmPassword": {
-      "get": {
+      "post": {
         "tags": [
           "Authentication"
         ],
