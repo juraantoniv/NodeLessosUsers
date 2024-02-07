@@ -21,7 +21,7 @@ router.get("/getUsersCars", buyController.getAllBuId);
 router.post(
   "/create",
   cardMiddleware.postCar,
-  authMiddlewareForCheck.checkRightsOfUser(ERights.Seller),
+  // authMiddlewareForCheck.checkRightsOfUser(ERights.Seller),
   goodsController.Create,
 );
 router.delete(
@@ -30,7 +30,11 @@ router.delete(
   authMiddlewareForCheck.checkRightsOfUser(ERights.Seller),
   goodsController.Delete,
 );
-router.patch("updateCar/", authMiddleware.checkAccessToken, goodsController.Update);
+router.patch(
+  "updateCar/",
+  authMiddleware.checkAccessToken,
+  goodsController.Update,
+);
 router.get(
   ":name",
   authMiddleware.checkAccessToken,

@@ -45,13 +45,17 @@ class UserController {
   ): Promise<Response> {
     const payload = req.res.locals.tokenPayload;
     try {
+      const file = req.files.image as UploadedFile;
+
       const dto = req.body;
       const user = await User.findOne({ _id: payload.userId });
       if (!user) {
         throw new ApiError("User not found", 404);
       }
 
-      const us = await userService.updateUser(payload.userId, dto);
+      console.log(req.body.avatar);
+
+      const us = await userService.updateUser(payload.userId, dto, file);
       return res.status(201).json(us);
     } catch (e) {
       next(e);

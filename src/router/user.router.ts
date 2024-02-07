@@ -22,7 +22,7 @@ router.delete(
 );
 router.patch(
   "/update",
-  authMiddlewareForCheck.checkRightsOfUser(ERights.Admin),
+  authMiddlewareForCheck.checkUserForUpdate,
   authMiddleware.checkAccessToken,
   userController.Update,
 );

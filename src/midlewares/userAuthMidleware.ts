@@ -21,6 +21,26 @@ class AuthMiddlewareForCheck {
       }
     };
   }
+
+  public async checkUserForUpdate(
+    req: Request,
+    res: Response,
+    next: NextFunction,
+  ) {
+    try {
+      const accessToken = req.get("Authorization");
+
+      const payload = tokenService.checkToken(accessToken, "access");
+      const user = await User.findById(payload.userId).lean();
+      if (!payload || user.rights !== ERights.Admin) {
+        throw new ApiError("You don have rights ", 401);
+      }
+
+      next();
+    } catch (e) {
+      next(e);
+    }
+  }
 }
 
 export const authMiddlewareForCheck = new AuthMiddlewareForCheck();
